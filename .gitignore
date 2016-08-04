@@ -1,0 +1,10 @@
+*.log
+tmp
+.grunt
+.DS_Store
+.idea
+.yo-rc.json
+.project
+dist/
+coverage/
+node_modules/

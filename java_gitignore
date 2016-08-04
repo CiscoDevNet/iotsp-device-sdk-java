@@ -1,0 +1,11 @@
+sampleApp/
+src/test/java/SdkUnitTest.java
+src/main/java/com/cisco/devicesdk/core/IotspWamp.java
+src/main/java/com/cisco/devicesdk/core/IotspGateway.java
+src/main/java/com/cisco/devicesdk/core/IotspGatewayService.java
+src/main/java/com/cisco/devicesdk/sample/SampleGateWay.java
+src/test/java/IotspTools.java
+src/test/java/TestSystem.java
+src/test/resources/data/
+build/
+.gradle/
