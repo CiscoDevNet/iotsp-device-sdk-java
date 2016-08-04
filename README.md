@@ -4,7 +4,7 @@ iotsp device sdk in Java
 
 * System Requirement <br>
   The system requires a Java JDK (not just a JRE) installed, version 6 or higher (to check, use java -version) and JAVA_HOME set properly.<br>
-  The java library dependencies are managed by the gradle tool which is included in the package under the direcoty `gradle/wrapper`.
+  The java library dependencies are managed by the gradle tool which is included in the package under the directory `gradle/wrapper`.
   The gradle tool will download the dependencies automatically from well-known java library repositories or website speficied in file `build.gradle`.<br> To get a detailed list of used libraries, refer to file `build.gradle`  and section `dependencies`.<br>
   Users could also preinstall the depencies manually but it's less convenient and not recommended.
   
@@ -23,7 +23,7 @@ iotsp device sdk in Java
   broker, collecting messages from device side over mqtt etc, and posting them to the cloud.
 
   The mode change could be done by changing the SDK configurations.
-  The SDK configuration file is config/sdkConfig.json.
+  The SDK configuration file is `config/sdkConfig.json`.
   The following are the descriptions of the data field,
 ```
       "Server"                    /* Registration server FQDN */ 
@@ -42,10 +42,19 @@ iotsp device sdk in Java
   The sample apps are available at `src/main/java/com/cisco/devicesdk/sample/`.<br>
   The major SDK interface functions are:
 ```Java
+      // The system supports uuid only and uuid/macAddress/deviceSerialNumber device registration. 
       thing = new IotspThing(uuid, mac, deviceSerialNum);
       thing.post(message); 
       thing.close(); 
 ```
+  The sample tests are available at `src/test/java/`.<br>
+  Before the sample tests, make sure the server in `config/sdkConfig.json` is properly set, and the 
+  devices in the sample test file or `mockdata.txt` are claimed in the cloud.<br>
+  To run the sample test, use
+```
+  ./gradlew sampleTest
+```
+
  
 * JDK logging<br> 
   The system has the following log levels

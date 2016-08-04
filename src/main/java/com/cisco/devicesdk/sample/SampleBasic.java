@@ -6,9 +6,6 @@
  * DESCRIPTION
  *   IoTSP thing SDK sample app 
  *
- * Author
- *   wxiangqi  2016-07-29 
- *
  *********************************************************************/
 
 package com.cisco.devicesdk.sample;
