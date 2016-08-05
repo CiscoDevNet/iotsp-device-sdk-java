@@ -5,12 +5,13 @@ iotsp device sdk in Java
 * System Requirement <br>
   The system requires a Java JDK (not just a JRE) installed, version 6 or higher (to check, use java -version) and JAVA_HOME set properly.<br>
   The java library dependencies are managed by the gradle tool which is included in the package under the directory `gradle/wrapper`.
-  The gradle tool will download the dependencies automatically from well-known java library repositories or website speficied in file `build.gradle`.<br> To get a detailed list of used libraries, refer to file `build.gradle`  and section `dependencies`.<br>
+  The gradle tool will download the dependencies automatically from well-known java library repositories or website specified in file `build.gradle`.<br> To get a detailed list of libraries in use, refer to file `build.gradle`  and section `dependencies`.<br>
   Users could also preinstall the depencies manually but it's less convenient and not recommended.
   
 
 * Build Howto <br>
   The system is using the gradle wrapper as the build tool.<br>
+  After a successful build, `./build/libs/device-sdk-java-1.0.0.jar` will be generated.<br>
   To build the system, use 
 ```
       ./gradlew build
@@ -37,9 +38,8 @@ iotsp device sdk in Java
 
 ```
 
-* Code Structure, APIs and Sample Apps<br>
+* Code Structure and APIs<br>
   The SDK core code are available at `src/main/java/com/cisco/devicesdk/core/`.<br>
-  The sample apps are available at `src/main/java/com/cisco/devicesdk/sample/`.<br>
   The major SDK interface functions are:
 ```Java
       // The system supports uuid only and uuid/macAddress/deviceSerialNumber device registration. 
@@ -47,15 +47,17 @@ iotsp device sdk in Java
       thing.post(message); 
       thing.close(); 
 ```
+
+* Sample Applications<br>
+  The sample apps are available at `src/main/java/com/cisco/devicesdk/sample/`.<br>
   The sample tests are available at `src/test/java/`.<br>
-  Before the sample tests, make sure the server in `config/sdkConfig.json` is properly set, and the 
-  devices in the sample test file or `mockdata.txt` are claimed in the cloud.<br>
+  Before the sample tests are executed, make sure that the server in `config/sdkConfig.json` is properly set, <br>
+  and that the device uuids in the `SampleBasic.java` and `data/mockdata.txt` are claimed in the cloud.<br>
   To run the sample test, use
 ```
   ./gradlew sampleTest
 ```
 
- 
 * JDK logging<br> 
   The system has the following log levels
 ```
