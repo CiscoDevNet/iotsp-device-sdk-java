@@ -9,3 +9,14 @@ src/test/java/TestSystem.java
 src/test/resources/data/
 build/
 .gradle/
+.settings/
+.project
+examples/iotsp-batching/.classpath
+examples/iotsp-batching/.project
+examples/iotsp-batching/.setings/
+examples/iotsp-batching/RE_BC_Multi_Devices.log
+examples/iotsp-edge-rule-engine/.classpath
+examples/iotsp-edge-rule-engine/.project
+examples/iotsp-edge-rule-engine/.settings/
+examples/iotsp-edge-rule-engine/RE_Multi_Devices.log
+

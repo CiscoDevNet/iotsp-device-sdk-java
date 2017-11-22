@@ -3,8 +3,8 @@
 
 This project provides parser library and sample app for iot rule engine. The sample application reads sensor values from a Raspberry Pi attached to your gateway. The Raspberry Pi should be running the SenseHat app (Instructions for installing the Sensehat app on the Raspberry Pi can be found in the readme of Pi-sensehat directory of this repository). The messages pulled from Raspberry Pi are fed to the rule engine and depending on the rule and command line options specified, are sent to IoT DataConnect Cloud.  
 
-## Change log
-08/02/2017 - Inital Commit, Version 0.1.0.0 
+## Documentation    
+* [GettingStarted](GettingStarted.md) for documentation.       
 
 ## Features 
 - [x] Rule Processing library 
@@ -46,19 +46,36 @@ The project is compiled using Java 1.8. and Java 1.8 is required for this applic
 
 # Running the Application 
 ## To RUN the app in Eclipse IDE :  
-* Run the RESampleApp.java.  
+* Clone the repository and Build the app using  
+```  
+cd iotsp-edge-rule-engine  
+
+./gradlew clean build   
+```    
+
+* Modify package_config.ini in root.   
+
+* Run the RESampleApp.java.   
+
+* Provide environment variables by adding in Program Variables section of Run Configurations  
+	* -s -> For sending data to cloud  
+	* -p -> For sending data to device  
+	* -d IOxPackage/genericData.data -> For reading data from a file. Refer [genericData](IOxPackage/genericData.data) file to check the message format.  
+	
+* Provide following in the VM Arguments section of Run Configurations  
+	* -Djava.util.logging.config.file=IOxPackage/logging.properties  
 
 ## To RUN the build-in command line rule eval app :  
 * Clone the repo and Build the app using  
 ```  
 git clone <this repository>     
 
-cd /device-sdk-java/examples/iotsp-edge-rule-engine
+cd iotsp-edge-rule-engine.git  
 
 ./gradlew clean build    
 ```    
 
-* Modify package_config.ini. If this code is running on a local environment, modify the package_config.ini in the root directory of this project to contain the correct cluster and device information. If this code is running in IOx, the package_config.ini in the IOxPackage directory needs to be updated to contain the correct cluster and device information.   
+* Modify package_config.ini. If this code is running on a local environment, modify the package_config.ini in the root directory of this project to contain the correct cluster and device information. If this code is running in IOx, the package_config.ini in the IOxPackage directory needs to be updated to contain the correct cluster and device information. Also to see logs, modify package_config.ini's logging section. Make console_logging as INFO.     
 
 * To read messages from raspberry pi and print the actions on them, run the following command:  
 ```
@@ -85,16 +102,16 @@ https://learninglabs.cisco.com/tracks/Cisco-IOx
 
 * Clone this repo and build the app using  
 ```  
-git clone <this repository>     
+git clone <This repository>     
 
-cd /device-sdk-java/examples/iotsp-edge-rule-engine
+cd iotsp-edge-rule-engine.git  
 
 ./gradlew clean build    
 ```    
 
 * Copy the fat jar from build/libs to IOxPackage.     
 ```  
-cp build/libs/iot-edge-rule-engine-0.1-SNAPSHOT-all.jar IOxPackage/  
+cp build/libs/iot-edge-rule-engine-<version>-SNAPSHOT-all.jar IOxPackage/  
 ```  
 
 * The IOxPackage has all the necessary files required to deploy the app. Inside of the folder the following files can be found
@@ -132,16 +149,16 @@ cp build/libs/iot-edge-rule-engine-0.1-SNAPSHOT-all.jar IOxPackage/
 ## To RUN the app on Gateway using Portal:  
 * Clone the repo and Build the app using  
 ```  
-git clone <this repository>     
+git clone <This repository>     
 
-cd /device-sdk-java/examples/iotsp-edge-rule-engine
+cd iotsp-edge-rule-engine.git  
 
-./gradlew clean build 
+./gradlew clean build    
 ```    
 
 * Copy the fat jar from build/libs to IOxPackage.     
 ```  
-cp build/libs/iot-edge-rule-engine-0.1-SNAPSHOT-all.jar IOxPackage/  
+cp build/libs/iot-edge-rule-engine-<version>-SNAPSHOT-all.jar IOxPackage/  
 ```  
 
 * The IOxPackage has all the necessary files required to deploy the app. Go inside the folder.  Following files can be found
@@ -175,7 +192,7 @@ cp build/libs/iot-edge-rule-engine-0.1-SNAPSHOT-all.jar IOxPackage/
 
 * When running the app, the logs by default go into RE_Multi_Devices<number>.log file. Log rotation is by default enabled which allows only 3 log files to be uploaded each of size 1Mb.  
 
-* Note on console logging: The current sample application redirects the console logs to "stdout.log". The console logging is turned off by default in the "package_config.ini". If this is turned on and the application runs for long time, there is a chance of logs flooding up the space. If the redirection is disabled, IOx will have an issue with the stdout/stderr buffers getting full and it will not be flushed properly, causing the application to hang. Therefore, care needs to be taken when enabling console logging. The application developers can choose not to log to console at all by disabling the console logger in logging.properties.
+* Note on console logging: The current sample application redirects the console logs to "stdout.log". The console logging is turned off by default in the "package_config.ini". If this is turned on and the application runs for long time, there is a chance of logs flooding up the space. If the redirection is disabled, the IoX will have an issue with the stdout/stderr buffers getting full and it will not be getting flushed properly, causing the application might hang. Therefore, care needs to be taken when enabling console logging. The application developers can choose not to log to console at all by disabling the console logger in logging.properties.
 
 # Change Log
 * To change log level in the log file or stdout, go to IOxPackage/package_config.ini. Modify the log_level_file or log_level_console to get desired log level. The project uses java.util.logging. So the supported log levels are:-  
