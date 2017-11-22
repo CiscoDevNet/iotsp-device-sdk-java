@@ -1,109 +1,17 @@
-# iotsp-batch-store-manager  
+# iotsp-batching   
 
-This project provides functionality for batching, storing, and compressing messages received.     
+## Documentation     
+* [GettingStarted](GettingStarted.md) for documentation.   
 
 ## Overview   
-The following repository implements batching, storing and compression library.   
-For batching and storing the user defines the policies which decide the minimum batch size maintained before it can be compressed and sent. The policies provided are -   
-* **MAX_SIZE** - The number of elements in a batch before it is declared to be ready for compression. If this policy is not defined then a default size policy is taken. (Default is 1mb)    
-  - **IMPORTANT** - Please note that max size has priority over number of elements and max timeout.    
-* **MAX_NUMBER_OF_ELEMENTS** - The size of batch before it is declared to be ready for compression.     
-* **MAX_TIMEOUT** - The timeout of a batch before the batch is declared to be ready for compression. The batch time starts from its 1st message and is reinitialized after a clear of batch is called.    
-   
+The following repository provides sample application for batching, storing and compression of messages sent upstream.       
 There are 2 types of messages that are received by the library -  
-* Messages that are to be batched according to policy defined.     
-* Messages that are to be batched for immediate sending - These messages are messages that must be sent immediately but could not be processed due to connection errors or other disruptions. These messages are to be sent as soon as the inhibiting condition is resolved.       
-
-## Change log
-
-08/08/2017 - Initial Commit v 0.1.0.0
-
+* To be batched according to policy defined     
+* To be batched for immediate send - These messages are those which had to be sent immediately but couldn't be processed due to connection errors or some other reasons. These are to be sent as soon as the prevailing condition is resolved.       
  
-# Features  
-- [x] Batching APIs 
-- [x] Batching Policies - Number of Messages, Timeout, Size of Batch    
-- [x] Compression (Zlib) and Decompression APIs
-- [x] Client for pushing to cloud
-- [ ] Unit tests  
-- [ ] Additional compression libraries 
  
 ## Requirements   
-* Java 1.8    
-
-## API Overview    
-  
-### The Batching APIs are:  
-  
-* Add message to the batch      
-```    
-public boolean addMessageToBatch(String message) throws IoTBatchingException;       
-```     
-
-* Get the number of messages, size and time left before batch is ready    
-```     
-public String getCurrentBatchStatus();  
-```    
- 
-* Get the compressed batch after checking if it's ready.  
-```    
-public byte[] getCompressedBatch();
-```   
-
-* Clear batch stored     
-```   
-public void clearBatch();  
-```    
-
-* Close the batch manager   
-```   
-public void closeBatchManager();
-```   
-
-### The Compression APIs are:      
-
-* Set the compression level - MIN_COMPRESSION,MED_COMPRESSION,MAX_COMPRESSION      
-```
-public void setCompressionLevel(CompressionLevel level);   
-```  
-
-* Get the compression level.  
-```
-public CompressionLevel getCompressionLevel();  
-```   
-
-* Compressing the input String   
-```  
-public byte[] compress(String data) throws IOException;
-```   
-
-* Compressing the input byte array  
-```  
-public byte[] compress(byte[] data) throws IOException;
-```   
-
-* De-compressing the byte array  
-```  
-public byte[] decompress(byte[] data) throws IOException, DataFormatException;
-```   
-
-### Sending Batch to Cloud APIs:
-
-* Creates a client that takes in a properties file, compression library, and a MQTT client and will continuously check if a if batch is ready to send to the client.
-```
-public BatchToCloudClient(Properties props, ICompressionUtils compression,
-ICloudConnectClient dcClient) throws IoTBatchingException;
-```
-
-* Puts a message into a batch
-```
-public boolean putMessageInBatch(BatchMessage message) throws IoTBatchingException;
-```
-
-* Closes thread that continuously checks if batches are ready that is spun up during creation of the BatchToCloudClient object.
-```
-public void closeBatchCheckThread();
-```
-
+* Java 1.8     
 
 # Getting Started  
 ## Development notes
@@ -111,100 +19,101 @@ Follow these steps for initial setup and get started with development:
 
 1. Install JDK, recommended version 8  
 
-2. Clone this repository 
+2. Clone repo      
 
-3. Build the project using "gradlew build" 
+3. execute "gradlew build" to build 
 
-4. To generate the eclipse project info including setting up classpaths use "gradlew eclipse"  
+4. "gradlew eclipse" to generate eclipse project info including setting up classpath  
 
-5. After step 3, a jar file for the project will be created. Make sure to copy the <>-all.jar from build/libs folder to IOxPackage folder to use the app as it is or use the <>.jar in any of your reference projects.    
+5. After step 3, a jar for the project will be created. Make sure you copy the <>-all.jar from build/libs folder to IOxPackage folder to use the app as it is or use the <>.jar in any of your reference projects.    
 
-## Important - Updating the repository
-After making and testing all changes to the repository, make sure to copy the latest fat jar (from build/libs/) to IOxPackage folder before checking in any code. Also update the ReadMe for project structure if there is any change.
+## To update the repository - Important  
+* After making and testing all your changes to the repository, make sure you copy the latest fat jar (from build/libs/) to IOxPackage folder before checking in your code. Also update the ReadMe for project structure if there is any change.  
+
 
 ### Notes
 #### Java version
 The project is compiled using Java 1.8.  So, you will need to use Java 1.8 for this application.
 
 
-# Runing the Application
+# Run the app    
+
 ## To RUN the app in Eclipse IDE :  
-* Run the BatchManagerSampleApp.java.   
-
-## To RUN the build-in command line rule eval app :  
-* Clone the repo and Build the app using  
+* Clone the repository and Build the app using  
 ```  
-git clone <this repository>       
+cd iotsp-batching  
 
-cd /device-sdk-java/examples/iotsp-batch-store-manager  
-
-./gradlew clean build    
+./gradlew clean build   
 ```    
 
-* Modify package_config.ini. If this code is running on a local environment, modify the package_config.ini in the root directory of this project to contain the correct cluster and device information. If this code is running in IOx, the package_config.ini in the IOxPackage directory needs to be updated to contain the correct cluster and device information.  
+* Modify package_config.ini in root.   
 
-* To read messages from raspberry pi and print the actions on them, run the following command:
-   ```
-   java -Djava.util.logging.config.file=IOxPackage/logging.properties -jar build/libs/iotsp-batch-store-manager-<version>-SNAPSHOT-all.jar  
-   ```  
-* By default the messages that are received by the sample application (by subscribing to MQTT topics) are logged in the log file. The sample application posts messages to the thing(the Rasberry pi) attached to the gateway when the option -p is mentioned. 
-   ```  
-   java -Djava.util.logging.config.file=IOxPackage/logging.properties -jar iotsp-batch-store-manager-<version>-SNAPSHOT-all.jar -p    
-   ```   
+* Run the BatchManagerSampleAppHBR.java.   
 
-* To read messages from raspberry pi and send the messages along with actions on them to IoTDC, run the following command::   
-   ```  
-   java -Djava.util.logging.config.file=IOxPackage/logging.properties -jar build/libs/iotsp-batch-store-manager-<version>-SNAPSHOT-all.jar -s  
-   ```   
+* Provide environment variables by adding in Program Variables section of Run Configurations  
+	* -s -> For sending data to cloud  
+	* -d IOxPackage/genericData.data -> For reading data from a file. Refer [genericData](IOxPackage/genericData.data) file to check the message format.  
+	
+* Provide following in the VM Arguments section of Run Configurations  
+	* -Djava.util.logging.config.file=IOxPackage/logging.properties  
+
+## To RUN the jar:    
+* Clone the repo and Build the app using  
+```  
+cd iotsp-batching  
+
+./gradlew clean build   
+```    
+
+* Modify package_config.ini in root. To see logs on the console, make sure the "log_level_console" under logging section in package_config.ini is turned to at least INFO.    
 
 * To read messages from a file and print the actions, run the following command:   
    ```  
-   java -Djava.util.logging.config.file=IOxPackage/logging.properties -jar build/libs/iotsp-batch-store-manager-<version>-SNAPSHOT-all.jar -d IOxPackage/genericData.data  
+   java -Djava.util.logging.config.file=IOxPackage/logging.properties -jar build/libs/iotsp-batching-<version>-SNAPSHOT-all.jar -d IOxPackage/genericData.data  
+   ```  
+     
+* To read messages from a file and send data upstream, run the following command:   
+   ```  
+   java -Djava.util.logging.config.file=IOxPackage/logging.properties -jar build/libs/iotsp-batching-<version>-SNAPSHOT-all.jar -d IOxPackage/genericData.data -s
    ```  
 
 ## To RUN the app in IOx VM on your local setup:
-* Learn how to setup the local IOx VM with a step by step guide on how to build IOx packages with an ioxclient here https://learninglabs.cisco.com/tracks/Cisco-IOx
+* Setup the local IOx VM using
+https://confluence-eng-sjc5.cisco.com/conf/display/IC/How+to+build+applications+on+Cisco+IOx  
 
-
-* Clone the repo and Build the app using  
+* Clone the repository and Build the app using  
 ```  
-git clone <this repository>      
-
-cd /device-sdk-java/examples/iotsp-batch-store-manager
+cd iotsp-batching/  
 
 ./gradlew clean build    
 ```    
 
 * Copy the fat jar from build/libs to IOxPackage.     
 ```  
-cp build/libs/iotsp-batch-store-manager-0.1.0.0-SNAPSHOT-all.jar IOxPackage/  
+cp build/libs/iotsp-batching-<version>-SNAPSHOT-all.jar IOxPackage/  
 ```  
 
-* The IOxPackage has all the necessary files required to deploy the app. Inside of the folder the following files can be found 
+* The IOxPackage has all the necessary files required to deploy the app. Go inside the folder.  Following files can be found
  - **.jar** - The latest fat jar file created by you used for deployment.  
  - **launch.sh** - The launch file used by application. 
-   - To send data to mqtt client make sure to add -s in java -jar line 
+   * If you want to send data to mqtt client make sure to add -s in java -jar line like  
    ```  
-   java -Xmx160m -Djava.net.preferIPv4Stack=true -Djava.util.logging.config.file=logging.properties -jar iotsp-batch-store-manager-<version>-SNAPSHOT-all.jar -s   
+   java -Xmx160m -Djava.net.preferIPv4Stack=true -Djava.util.logging.config.file=logging.properties -jar iotsp-batching-<version>-SNAPSHOT-all.jar -s   
    ```   
-   * By default the messages that are received by the sample application (by subscribing to MQTT topics) are logged in the log file. The sample application posts messages to the thing(the Raspberry pi) attached to gateway when the -p option is supplied as in the example below.
+   * If you want to read messages from a file then make sure you add the file in IOxPackage and add -d filename in java -jar line like  
    ```  
-   java -Xmx160m -Djava.net.preferIPv4Stack=true -Djava.util.logging.config.file=logging.properties -jar iotsp-batch-store-manager-<version>-SNAPSHOT-all.jar -p  
-   ```   
-   * To read messages from a file, make sure to add the file in IOxPackage and add -d filename in java -jar line
-   ```  
-   java -Xmx160m -Djava.net.preferIPv4Stack=true -Djava.util.logging.config.file=logging.properties -jar iotsp-batch-store-manager-<version>-SNAPSHOT-all.jar -d genericData.data   
+   java -Xmx160m -Djava.net.preferIPv4Stack=true -Djava.util.logging.config.file=logging.properties -jar iotsp-batching-<version>-SNAPSHOT-all.jar -d genericData.data   
    ```    
  - **genericData.data** - In case you want to read the observations from a file, add it here like this file.  
  - **logging.properties** - Modify this only if you want to change log levels or logging format.  
  - **package_config.ini** - This file contains configuration for app. Modify this accordingly.  
  - **package.yaml** - This is used for IOx app packaging. Modify it accordingly.  
 
-* Deploy app in local IOx using commands shown below. The commands can change based on the IOxClient location and the iotsp-edge-rule-engine location.  
+* Deploy app in local IOx using commands shown below. The commands can change based on your IOxClient location and your iotsp-edge-rule-engine location.  
 ```
-./ioxclient package ..path/iotsp-batch-store-manager/IOxPackage  
+./ioxclient package ..path/iotsp-batching/IOxPackage  
 
-./ioxclient application install <application_name> ..path/iotsp-batch-store-manager/IOxPackage/package.tar    
+./ioxclient application install <application_name> ..path/iotsp-batching/IOxPackage/package.tar    
 
 ./ioxclient application activate <application_name>    
 
@@ -212,34 +121,34 @@ cp build/libs/iotsp-batch-store-manager-0.1.0.0-SNAPSHOT-all.jar IOxPackage/
 ```    
 
 ## To RUN the app on Gateway using Portal:  
-* Clone the repo and Build the app using  
-```  
-git clone <this repository>   
+* Clone the repository and Build the app using  
+```     
 
-cd /device-sdk-java/examples/iotsp-batch-store-manager  
+cd iotsp-batching/  
 
 ./gradlew clean build    
 ```    
 
 * Copy the fat jar from build/libs to IOxPackage.     
 ```  
-cp build/libs/iotsp-batch-store-manager-0.1.0.0-SNAPSHOT-all.jar IOxPackage/  
+cp build/libs/iotsp-batching-<snapshot>-SNAPSHOT-all.jar IOxPackage/  
 ```  
 
-* The IOxPackage has all the necessary files required to deploy the app. Inside the folder, the following files can be found
+* The IOxPackage has all the necessary files required to deploy the app. Go inside the folder.  Following files can be found
  - **.jar** - The latest fat jar file created by you used for deployment.  
  - **launch.sh** - The launch file used by application. 
-   - To send data to mqtt client make sure to add -s in java -jar line in the format below  
+   * If you want to send data to mqtt client make sure to add -s in java -jar line like  
    ```  
-   java -Xmx160m -Djava.net.preferIPv4Stack=true -Djava.util.logging.config.file=logging.properties -jar iotsp-batch-store-manager-<version>-SNAPSHOT-all.jar -s  
+   java -Xmx160m -Djava.net.preferIPv4Stack=true -Djava.util.logging.config.file=logging.properties -jar iotsp-batching-<version>-SNAPSHOT-all.jar -s  
    ```   
-   * By default the messages received by the sample application (by subscribing to MQTT topics) are logged in the log file. The sample application posts messages to the thing(the Raspberry pi) attached to gateway when the -p option is supplied as in the example below.
+   * By default the messages that are received by the sample application (by subscribing to MQTT topics) are logged in the log file. 
+     The sample application could post the the message to thing(Rpi) attached to gateway when the option -p is mentioed as below.
    ```  
-   java -Xmx160m -Djava.net.preferIPv4Stack=true -Djava.util.logging.config.file=logging.properties -jar iotsp-batch-store-manager-<version>-SNAPSHOT-all.jar -p  
+   java -Xmx160m -Djava.net.preferIPv4Stack=true -Djava.util.logging.config.file=logging.properties -jar iotsp-batching-<version>-SNAPSHOT-all.jar -p  
    ```   
-   * To read messages from a file then make sure to add the file in IOxPackage and add -d filename in java -jar line in the format below.
+   * If you want to read messages from a file then make sure you add the file in IOxPackage and add -d filename in java -jar line like  
    ```  
-   java -Xmx160m -Djava.net.preferIPv4Stack=true -Djava.util.logging.config.file=logging.properties -jar iotsp-batch-store-manager-<version>-SNAPSHOT-all.jar -d genericData.data   
+   java -Xmx160m -Djava.net.preferIPv4Stack=true -Djava.util.logging.config.file=logging.properties -jar iotsp-batching-<version>-SNAPSHOT-all.jar -d genericData.data   
    ```    
  - **genericData.data** - In case you want to read the observations from a file, add it here like this file.  
  - **logging.properties** - Modify this only if you want to change log levels or logging format.  
@@ -248,20 +157,20 @@ cp build/libs/iotsp-batch-store-manager-0.1.0.0-SNAPSHOT-all.jar IOxPackage/
 
 * Package the app using commands shown below. The commands can change based on your IOxClient location and your iotsp-edge-rule-engine location.  
 ```
-./ioxclient package ..path/iotsp-edge-rule-engine/IOxPackage      
+./ioxclient package ..path/iotsp-batching/IOxPackage      
 ```    
 
 * Go to portal and upload your package.tar.gz in Fog Application tab.  
 
-* After uploading the app, install the app with atleast c1.medium size. Change the device ip address to point to the Raspberry Pi ip address. Change the rule if required.   
+* After you upload the app, install the app with at least c1.medium size.       
 
-* When running the app, the logs by default go into RE_Multi_Devices.log file. Log rotation is by default enabled which allows only 3 log files to be uploaded each of size 1Mb.  
+* When you run the app, the logs by default go into RE_BC_Multi_Devices<number>.log file. Log rotation is by default enabled which allows only 3 log files to be uploaded each of size 1Mb.  
 
-* Note on console logging: The current sample application redirects the console logs to "stdout.log". The console logging is turned off by default in the "package_config.ini". If this is turned on and the application runs for long time, there is a chance of logs flooding up the space. If the redirection is disabled, IOx will have an issue with the stdout/stderr buffers getting full and it will not be flushed properly, causing the application to hang. Therefore, care needs to be taken when enabling console logging. The application developers can choose not to log to console at all by disabling the console logger in logging.properties.
+* Note on console logging: The current sample application redirects the console logs to "stdout.log". The console logging is turned off by default in the "package_config.ini". If turned on and application runs for long time there is a chance of filling up the space. If the redirection is disabled, the IoX will have an issue with the stdout/stderr buffers getting full and not getting flushed properly and application migh hang. So when enabling console logging care need to be taken. The application developers can choose not to log to console at all by disabling the console logger in logging.properties itself.
 
-# Changing Log Level
-* To change log level in the log file or stdout, go to IOxPackage/package_config.ini. Modify the log_level_file or log_level_console to get desired log level. The project uses java.util.logging. So the supported log levels are:
-- FINEST, FINER, FINE, CONFIG, INFO, WARNING, SEVERE
+# Change Log
+* To change log level for your log file or stdout, go to IOxPackage/package_config.ini. Modify log_level_file or log_level_console to get desired log level. The project uses java.util.logging. So the supported log levels are:-  
+  FINEST, FINER, FINE, CONFIG, INFO, WARNING, SEVERE  
   They map to logback.xml logging levels as follow:  
  * FINEST  -> TRACE  
  * FINER   -> DEBUG  
@@ -271,5 +180,9 @@ cp build/libs/iotsp-batch-store-manager-0.1.0.0-SNAPSHOT-all.jar IOxPackage/
  * WARNING -> WARN  
  * SEVERE  -> ERROR  
 
-# Questions and Feedback  
-Please email all questions and feedback to dataconnect-support@cisco.com        
+# Remaining Tasks   
+- [x] Batching  
+- [x] Batch Policies - Number of Messages, Timeout, Size of Batch    
+- [x] Compression and Decompression  
+- [x] Unit test  
+- [x] Helper class for usage        
