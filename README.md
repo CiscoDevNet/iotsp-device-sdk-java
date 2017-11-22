@@ -51,7 +51,20 @@ To write rules, please refer Cisco's tutorial on their [DSL](https://github.com/
   - The examples directory contains two subdirectories - iotsp-batching and iotsp-edge-rule-engine. These directories contain information on how to install and run the sample applications. They also provide APIs and documentation on different options the sample applications provide and use.
   
 ### libs
-This directory contains libraries necessary for runnning the above sample applications.
+This directory contains libraries necessary for runnning the above sample applications.  
+
+## Change Log   
+
+### Pi-Sensehat   
+Aug 08, 2017		Initial Check in 
+
+### iotsp-edge-rule-engine   
+Aug 08, 2017		Initial Check in   
+Nov 22, 2017		Update jars, Special Message, Document update   	   
+
+### iotsp-batching      
+Aug 08, 2017		Initial Check in   
+Nov 22, 2017		Update jars, Special Message, Document update   	  
 
 ## Support  
 Please email all questions and feedback to dataconnect-support@cisco.com
