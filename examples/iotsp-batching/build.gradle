@@ -33,14 +33,15 @@ configurations {
 	applibs
 }
 
+
 // In this section you declare the dependencies for your production and test code
 dependencies {
 
     compile files('../../libs/iot-state-processing-dsl-0.8.2-SNAPSHOT.jar')
     compile files('../../libs/iot-edge-rule-engine-0.3.0.3-SNAPSHOT.jar')
-    compile files('../../libs/iot-mqtt-client-edge-0.3.0.3-SNAPSHOT.jar')
-    compile files('../../libs/iotsp-batch-store-manager-0.3.0.6-SNAPSHOT.jar')
-    compile files('../../libs/iotsp-device-sdk-common-0.1.0.6-SNAPSHOT.jar')
+    compile files('../../libs/iot-mqtt-client-edge-0.3.0.4-SNAPSHOT.jar')
+    compile files('../../libs/iotsp-batch-store-manager-0.3.0.7-SNAPSHOT.jar')
+    compile files('../../libs/iotsp-device-sdk-common-0.1.0.8-SNAPSHOT.jar')
 
     compile 'org.slf4j:slf4j-api:1.7.13'
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.4'
