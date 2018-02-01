@@ -31,10 +31,10 @@ configurations {
 
 
 dependencies {
-    compile files('../../libs/iot-edge-rule-engine-0.3.0.3-SNAPSHOT.jar')
-    compile files('../../libs/iot-state-processing-dsl-0.8.2-SNAPSHOT.jar')
-    compile files('../../libs/iot-mqtt-client-edge-0.3.0.4-SNAPSHOT.jar')
-    compile files('../../libs/iotsp-device-sdk-common-0.1.0.8-SNAPSHOT.jar')
+    compile files('../../libs/lib-jars/iot-edge-rule-engine-0.3.0.3-SNAPSHOT.jar')
+    compile files('../../libs/lib-jars/iot-state-processing-dsl-0.8.2-SNAPSHOT.jar')
+    compile files('../../libs/lib-jars/iot-mqtt-client-edge-0.3.0.4-SNAPSHOT.jar')
+    compile files('../../libs/lib-jars/iotsp-device-sdk-common-0.1.0.8-SNAPSHOT.jar')
     
     compile group: 'org.ini4j', name: 'ini4j', version: '0.5.1'
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.4'

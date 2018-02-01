@@ -6,6 +6,7 @@ To get started, clone this repository.
 
 * [Overview](#overview)
 * [How to use the Cisco IoT SDKs for Java](#how-to-use-the-cisco-iot-sdks-for-java)
+* [Java Docs for Libraries](#java-docs-for-libraries)
 * [Sample Application](#sample-application)  
 * [Writing Rules](#writing-rules)  
 * [Directory Structure](#directory-structure)
@@ -31,6 +32,18 @@ The application will run on Mac, Linux, IOx. To start developing these applicati
 | 2       | iotsp-batching |  [Getting Started](examples/iotsp-batching/GettingStarted.md), [Readme](examples/iotsp-batching/README.md)| 
 | 3      | Pi-sensehat | [Readme](Pi-sensehat/README.md)|  
 
+## Java docs for libraries    
+
+There are a number of libraries required in order to run sample applications - iotsp-edge-rule-engine and iotsp-batching. These libraries are stored [here](libs/lib-jars). The Javadoc for these libraries can be found [here](libs/javadoc-jars). In order to access any libraries Javadoc, run the following commands from root of the folder.  
+```   
+cd libs/javadoc-jars
+mkdir tmpFolder
+cp <Jar name of library whose java doc is to be accessed> tmpFolder/
+cd tmpFolder/
+jar -xvf <Jar name of library whose java doc is to be accessed>
+```   
+Then navigate to this "tmpFolder" from your finder and open "index.html" using any web browser.  
+
 ## Sample Application    
 
 In this repository, you can find simple sample implementations that will kickstart your development.  
@@ -51,7 +64,9 @@ To write rules, please refer Cisco's tutorial on their [DSL](https://github.com/
   - The examples directory contains two subdirectories - iotsp-batching and iotsp-edge-rule-engine. These directories contain information on how to install and run the sample applications. They also provide APIs and documentation on different options the sample applications provide and use.
   
 ### libs
-This directory contains libraries necessary for runnning the above sample applications.  
+This directory contains libraries and their java-docs, necessary for runnning the above sample applications. It contains 2 folders:  
+* [lib-jars](libs/lib-jars) - This folder contains the library jars
+* [javadoc jars](libs/javadoc-jars) - This folder contains java doc jars for all the libraries.     
 
 ## Change Log   
 
@@ -60,11 +75,13 @@ Aug 08, 2017		Initial Check in
 
 ### iotsp-edge-rule-engine   
 Aug 08, 2017		Initial Check in   
-Nov 22, 2017		Update jars, Special Message, Document update   	   
+Nov 22, 2017		Update jars, Special Message, Document update  
+Jan 31, 2018		Update jars with Javadoc  	   	   
 
 ### iotsp-batching      
 Aug 08, 2017		Initial Check in   
-Nov 22, 2017		Update jars, Special Message, Document update   	  
+Nov 22, 2017		Update jars, Special Message, Document update   
+Jan 31, 2018		Update jars with Javadoc  	  
 
 ## Support  
 Please email all questions and feedback to dataconnect-support@cisco.com
