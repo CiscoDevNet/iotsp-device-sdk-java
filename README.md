@@ -83,5 +83,8 @@ Aug 08, 2017		Initial Check in
 Nov 22, 2017		Update jars, Special Message, Document update   
 Jan 31, 2018		Update jars with Javadoc  	  
 
+### Libraries   
+Feb 14, 2018		Update iot-mqtt-client-edge-0.3.1.0-SNAPSHOT.jar in library section which provides ability to publish messages at user defined labels. Refer java doc for details.   
+
 ## Support  
 Please email all questions and feedback to dataconnect-support@cisco.com
