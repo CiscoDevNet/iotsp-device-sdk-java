@@ -21,7 +21,9 @@ All notable changes to this project will be documented in this file.
 
 ### Added  
 
-* iotsp-device-sdk-common-0.3.3.0.jar - API to remove the supported commands from the GwConfigCache. Once the command is removed, GwConfigCache will throw an exception when command of that type is used to update cache. Users could add the command back using addSupportedCommandToCache. Corresponding javadoc in iotsp-device-sdk-common-0.3.3.0-SNAPSHOT-javadoc.jar.       
+* iotsp-device-sdk-common-0.3.3.0.jar - 
+  * API to remove the supported commands from the GwConfigCache. Once the command is removed, GwConfigCache will throw an exception when command of that type is used to update cache. Users could add the command back using addSupportedCommandToCache. 
+  * Corresponding javadoc in iotsp-device-sdk-common-0.3.3.0-SNAPSHOT-javadoc.jar.       
 
 ### Removed  
 * iotsp-device-sdk-common-0.3.2.0-SNAPSHOT-javadoc.jar
@@ -35,7 +37,9 @@ All notable changes to this project will be documented in this file.
 ### Changed   
 
 * README.md - Added change log to README.md for iotsp-device-sdk-common-0.3.2.0.jar.    
-* iotsp-device-sdk-common-0.3.2.0-SNAPSHOT.jar - Updating the configuration/command version in GwConfigCache when an empty device list is sent with the command "set_device". Intializing the device connected state, device reachable state and device admin state to UNKNOWN instead of null.     
+* iotsp-device-sdk-common-0.3.2.0-SNAPSHOT.jar - 
+  * Updating the configuration/command version in GwConfigCache when an empty device list is sent with the command "set_device".
+  * Intializing the device connected state, device reachable state and device admin state to UNKNOWN instead of null.     
 
 ### Removed  
 
@@ -52,7 +56,9 @@ All notable changes to this project will be documented in this file.
 
 ### Added   
 
-* iotsp-device-sdk-common-0.3.0.0-SNAPSHOT.jar - Support for new command set_devices. Support QOS and persistence mode for MQTT client. Add confId in ack.    
+* iotsp-device-sdk-common-0.3.0.0-SNAPSHOT.jar - 
+  * Support for new command set_devices. Support QOS and persistence mode for MQTT client. 
+  * Add confId in ack.    
 
 
 ## Feb 14, 2018     
@@ -63,7 +69,10 @@ All notable changes to this project will be documented in this file.
 
 ### Added   
 
-* iot-mqtt-client-edge-0.3.1.0-SNAPSHOT.jar - Ability to publish messages at user defined labels which convert to Event Type in IBM. Refer iot-mqtt-client-edge-0.3.1.0-SNAPSHOT-javadoc.jar for details. Fixed - Max In Flight message exceeded, "Too Many Publish In Progress Exception". Adding support for configuring QOS and persistence.        
+* iot-mqtt-client-edge-0.3.1.0-SNAPSHOT.jar - 
+  * Ability to publish messages at user defined labels which convert to Event Type in IBM. Refer iot-mqtt-client-edge-0.3.1.0-SNAPSHOT-javadoc.jar for details. 
+  * Fixed - Max In Flight message exceeded, "Too Many Publish In Progress Exception". 
+  * Adding support for configuring QOS and persistence.        
 
 
 ## Jan 31, 2018    
@@ -73,8 +82,13 @@ All notable changes to this project will be documented in this file.
 ### Changed   
 
 * README.md - Update change log and add links for javadoc.   
-* iotsp-batch-store-manager-0.3.0.8-SNAPSHOT.jar - Remove all files under src/sampleApp/java, added java doc, Update multi gateway logic in CustomMQTTSSLClient.   
-* iot-mqtt-client-edge-0.3.0.4-SNAPSHOT.jar - Added javadoc, Update multi gateway logic in CustomMQTTSSLClient.    
+* iotsp-batch-store-manager-0.3.0.8-SNAPSHOT.jar - 
+  * Remove all files under src/sampleApp/java.
+  * Added java doc.
+  * Update multi gateway logic in CustomMQTTSSLClient.   
+* iot-mqtt-client-edge-0.3.0.4-SNAPSHOT.jar - 
+  * Added javadoc.
+  * Update multi gateway logic in CustomMQTTSSLClient.    
 * iotsp-device-sdk-common-0.1.0.8-SNAPSHOT.jar -  Added javadoc.      
 * Separated out jars for libraries and their javadocs into libs/lib-jars and libs/javadoc-jars respectively.   
 * Updated build.gradle for iotsp-batching and iotsp-edge-rule-engine projects for new location of jars.   
@@ -87,7 +101,19 @@ All notable changes to this project will be documented in this file.
 
 ### Removed   
 
-* Files removed from iotsp-batch-store-manager-0.3.0.8-SNAPSHOT.jar - ApplicationCommandLineOptions.java, CommandLineOptionParser.java, BatchToCloudClient.java, BatchManagerSampleAppHBR.java, BatchManagerSampleAppHBRRS232.java, SpecialMessage.java, BatchToCloudClientHBR.java, SIUDecoder.java, SerialRS232Implementation.java, BatchManagerSampleApp.java, BatchManagerSampleAppAmsterdam.java and SerialRS232ImplementationAms.java.   
+* Files removed from iotsp-batch-store-manager-0.3.0.8-SNAPSHOT.jar - 
+  * ApplicationCommandLineOptions.java
+  * CommandLineOptionParser.java
+  * BatchToCloudClient.java
+  * BatchManagerSampleAppHBR.java
+  * BatchManagerSampleAppHBRRS232.java
+  * SpecialMessage.java
+  * BatchToCloudClientHBR.java
+  * SIUDecoder.java
+  * SerialRS232Implementation.java
+  * BatchManagerSampleApp.java
+  * BatchManagerSampleAppAmsterdam.java 
+  * SerialRS232ImplementationAms.java.   
 
 
 ## Jan 22, 2018   
