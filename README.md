@@ -8,7 +8,8 @@ To get started, clone this repository.
 * [How to use the Cisco IoT SDKs for Java](#how-to-use-the-cisco-iot-sdks-for-java)
 * [Java Docs for Libraries](#java-docs-for-libraries)
 * [Sample Application](#sample-application)  
-* [Writing Rules](#writing-rules)  
+* [Writing Rules](#writing-rules)   
+* [Change Logs](#change-log) 
 * [Directory Structure](#directory-structure)
 * [Support](#support)  
 
@@ -70,33 +71,7 @@ This directory contains libraries and their java-docs, necessary for runnning th
 
 ## Change Log   
 
-### Pi-Sensehat   
-
-| S.No          | Date     | Changes  |   
-|:-------------:|:--------------------|:------------|  
-| 1				| Aug 08, 2017		  |	Initial Check in |   
-
-### iotsp-edge-rule-engine  
-| S.No          | Date     | Changes  | 
-|:-------------:|:--------------------|:------------|   
-| 1				|Aug 08, 2017		|	Initial Check in   |  
-| 2				|Nov 22, 2017		|	Update jars, Special Message, Document update|    
-| 3				|Jan 31, 2018		|	Update jars with Javadoc  |	     	   
-
-### iotsp-batching      
-| S.No          | Date     | Changes  | 
-|:-------------:|:--------------------|:------------| 
-| 1				|Aug 08, 2017		|Initial Check in |  
-| 2				|Nov 22, 2017		|Update jars, Special Message, Document update  |   
-| 3				|Jan 31, 2018		|Update jars with Javadoc  	 |    
-
-### Libraries   
-| S.No          | Date     | Tag     | Changes  | 
-|:-------------:|:--------------------|:--------------------|:------------| 
-| 1				|Feb 14, 2018		|version_1_14Feb2018           	|Update iot-mqtt-client-edge-0.3.1.0-SNAPSHOT.jar in library section which provides ability to publish messages at user defined labels. Refer java doc for details.|          
-| 2				|Feb 27,2018	    |version_2_05Mar2018               |Update iotsp-device-sdk-common-0.3.1.0-SNAPSHOT.jar in library section which fixes set device logic and add confId to all the ack Message |         
-| 3				|Mar 05,2018	    |version_3_06Mar2018              |Update iotsp-device-sdk-common-0.3.2.0-SNAPSHOT.jar in library section which updates the configuration/command version when an empty device list is sent with the command. Intializing the device connected state, device reachable state, device admin state to UNKNOWN instead of null. |         
-| 4				|Mar 06,2018	    |                       |Update iotsp-device-sdk-common-0.3.3.0-SNAPSHOT.jar in library section whichsupports API to remove the supported commands from the GwConfigCache. 
+Please find change log [here](CHANGELOG.md).     
 
 ## Support  
 Please email all questions and feedback to dataconnect-support@cisco.com
