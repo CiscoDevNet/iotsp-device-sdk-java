@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## March 21, 2018    
+
+### Changed   
+
+* Example applications iotsp-edge-rule-engine and iotsp-batching updated to use latest libraries.   
+
 ## March 19, 2018    
 
 ### Removed

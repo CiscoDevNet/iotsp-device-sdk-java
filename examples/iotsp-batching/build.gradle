@@ -39,9 +39,9 @@ dependencies {
 
     compile files('../../libs/lib-jars/iot-state-processing-dsl-0.8.2-SNAPSHOT.jar')
     compile files('../../libs/lib-jars/iot-edge-rule-engine-0.3.0.3-SNAPSHOT.jar')
-    compile files('../../libs/lib-jars/iot-mqtt-client-edge-0.3.0.4-SNAPSHOT.jar')
+    compile files('../../libs/lib-jars/iot-mqtt-client-edge-0.3.1.0-SNAPSHOT.jar')
     compile files('../../libs/lib-jars/iotsp-batch-store-manager-0.3.0.8-SNAPSHOT.jar')
-    compile files('../../libs/lib-jars/iotsp-device-sdk-common-0.1.0.8-SNAPSHOT.jar')
+    compile files('../../libs/lib-jars/iotsp-device-sdk-common-0.3.3.0-SNAPSHOT.jar')
 
     compile 'org.slf4j:slf4j-api:1.7.13'
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.4'
