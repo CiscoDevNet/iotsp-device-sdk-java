@@ -192,7 +192,7 @@ public class BatchManagerSampleApp {
     long messageID = 100000 + rnd.nextInt(900000);
 
     BatchMessage obvMsg = new BatchMessage.BatchMessageBuilder().format("json")
-        .qos(BaseConstants.QOS).timestamp(timestamp).messageId(messageID)
+        .qos(BaseConstants.ATMOST_ONCE_QOS).timestamp(timestamp).messageId(messageID)
         .deviceId(deviceAttributes.get(ConstantUtils.FIRST_DEVICE).getId()).data(msg.getPayload())
         .label(msg.getTopic()).build();
     if (obvMsg != null) {
