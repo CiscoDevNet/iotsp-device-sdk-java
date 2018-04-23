@@ -1,3 +1,4 @@
 gevent
 flask
 sense_hat
+sense_emu

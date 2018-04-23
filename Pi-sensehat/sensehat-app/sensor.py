@@ -5,7 +5,10 @@
 #
 # DESCRIPTION
 #     Raspberry Sensorhat sensor operations.
-from sense_hat import SenseHat
+try:
+    from sense_hat import SenseHat
+except ImportError:
+    from sense_emu import SenseHat
 sense = SenseHat()
 import time
 
