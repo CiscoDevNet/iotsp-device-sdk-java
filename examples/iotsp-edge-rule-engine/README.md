@@ -194,6 +194,9 @@ cp build/libs/iot-edge-rule-engine-<version>-SNAPSHOT-all.jar IOxPackage/
 
 * Note on console logging: The current sample application redirects the console logs to "stdout.log". The console logging is turned off by default in the "package_config.ini". If this is turned on and the application runs for long time, there is a chance of logs flooding up the space. If the redirection is disabled, the IoX will have an issue with the stdout/stderr buffers getting full and it will not be getting flushed properly, causing the application might hang. Therefore, care needs to be taken when enabling console logging. The application developers can choose not to log to console at all by disabling the console logger in logging.properties.
 
+# Telemetry     
+Telemetry data consists of the timestamps as message passes through sdk and into the DCM. This data can be enabled by setting flag "send_message_in_envelope" as true in package_config.ini.  
+
 # Change Log
 * To change log level in the log file or stdout, go to IOxPackage/package_config.ini. Modify the log_level_file or log_level_console to get desired log level. The project uses java.util.logging. So the supported log levels are:-  
   FINEST, FINER, FINE, CONFIG, INFO, WARNING, SEVERE  

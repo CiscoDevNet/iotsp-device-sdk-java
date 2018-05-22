@@ -32,44 +32,88 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cisco.iot.swp.device.sdk.common.exception.IoTDeviceSDKCommonException;
 import com.cisco.iot.swp.device.sdk.common.logger.CreateCustomLogger;
 import com.cisco.iot.swp.device.sdk.common.model.config.DeviceAttributes;
 import com.cisco.iot.swp.device.sdk.common.model.config.GatewayAttributes;
 import com.cisco.iot.swp.device.sdk.common.utils.BaseConstantsUserParams;
 import com.cisco.iot.swp.device.sdk.common.utils.ConfigHelper;
+import com.cisco.iot.swp.device.sdk.common.utils.HelperMethods;
 import com.cisco.iot.swp.dsl.utils.RuleProcessorException;
 import com.cisco.iot.swp.edge.mqtt.client.ICloudConnectClient;
 import com.cisco.iot.swp.edge.mqtt.client.MQTTClientEdge;
 import com.cisco.iot.swp.edge.mqtt.exception.IoTEdgeDcClientException;
 import com.cisco.iot.swp.edge.re.REMessage;
 import com.cisco.iot.swp.edge.re.RuleEngine;
-import com.cisco.iot.swp.edge.re.RuleEngineWithDCClient;
 import com.cisco.it.swp.edge.utils.ConstantUtils;
 
+
+/**
+ * The Class RESampleApp implements the sample application for demonstrating use of Cisco's MQTT client implementation and edge rule engine.
+ */
 public class RESampleApp {
+  
+  /** The logger. */
   // initialize the logger object by providing (className.class) as parameter
   private static Logger logger = LoggerFactory.getLogger(RESampleApp.class);
   // determine whether we want to send data to mqtt broker in IoT DataConnect cloud using the mqtt
   // client
-  // determine whether we want to post data received from IoT DataConnect cloud to Raspberry Pi
+  /** The props. */
+  
   private static Properties props = null;
+  
+  /** The http client to read data from raspberry pi. */
   private static CloseableHttpClient httpClient = null;
+  
+  /** The http client to post data to raspberry pi. */
   private static CloseableHttpClient httpPostClient = null;
+  
+  /** The http request on msg arrival. */
   private static HttpGet httpRequestOnMsgArrival = null;
+  
+  /** The observation get requests for different kind of sensors raspberry pi. */
   private static List<HttpGet> observationGetRequests = null;
+  
+  /** The dc client. */
   private static ICloudConnectClient dcClient = null;
+  
+  /** The rule processor. */
   private static RuleEngine ruleProcessor = null;
+  
+  /** The device sensors. */
   private static List<String> deviceSensors = Arrays.asList("temperature", "humidity", "pressure",
       "magnetometer", "accelerometer", "gyroscope");
+  
+  /** The scheduled executor service. */
   private static ScheduledExecutorService scheduledExecutorService;
+  
+  /** The scheduled future. */
   private static ScheduledFuture<?> scheduledFuture;
+  
+  /** The special message interval. */
   private static int SPECIAL_MESSAGE_INTERVAL = 30;
+  
+  /** The special message interval unit. */
   private static TimeUnit SPECIAL_MESSAGE_INTERVAL_UNIT = TimeUnit.SECONDS;
+  
+  /** The gw attributes. */
   private static GatewayAttributes gwAttributes = null;
+  
+  /** The device attributes. */
   private static Map<String, DeviceAttributes> deviceAttributes = null;
+  
+  /** The app options. */
   private static ApplicationCommandLineOptions appOptions = null;
+  
+  /** The special message send. */
   private static SpecialMessage specialMessageSend;
 
+  /**
+   * The main method.
+   *
+   * @param args the arguments
+   * @throws IoTEdgeDcClientException the io T edge dc client exception
+   */
   public static void main(String[] args) throws IoTEdgeDcClientException {
 
     deviceAttributes = new HashMap<String, DeviceAttributes>();
@@ -144,6 +188,9 @@ public class RESampleApp {
     }
   }
 
+  /**
+   * Start special message monitoring.
+   */
   private static void startSpecialMessageMonitoring() {
     logger.info("Starting Special Message Monitoring Thread");
     scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
@@ -164,6 +211,11 @@ public class RESampleApp {
         SPECIAL_MESSAGE_INTERVAL_UNIT);
   }
 
+  /**
+   * Send special messages like KeepAlive, Ack and Diagnostic messages upstream
+   *
+   * @throws Exception the exception
+   */
   public static void sendSpecialMessageUpstream() throws Exception {
     specialMessageSend.sendKeepAlive();
     specialMessageSend.sendDiagnosticMessage();
@@ -171,7 +223,13 @@ public class RESampleApp {
   }
 
   // EFFECTS: process data from Raspberry Pi and send data to IoT DataConnect cloud if -s is
-  // provided
+  //process data from Raspberry Pi and send data to IoT DataConnect cloud if -s is
+  /**
+   * Process data from received from raspberry pi if data sending to cloud is enabled
+   *
+   * @throws IoTEdgeDcClientException the io T edge dc client exception
+   */
+  
   private static void processDataFromHttpClient() throws IoTEdgeDcClientException {
     try {
       initHTTPClient();
@@ -218,12 +276,17 @@ public class RESampleApp {
         }
         logger.debug("msg='Restarting the cycle.....'");
       }
-    } catch (RuleProcessorException e) {
+    } catch (RuleProcessorException | IoTDeviceSDKCommonException e) {
       logger.error("Error when processing data with rule processor:  errMessage={},errStack={}",
           e.getMessage(), e);
     }
   }
 
+  /**
+   * Inits the DC client.
+   *
+   * @throws IoTEdgeDcClientException the io T edge dc client exception
+   */
   private static void initDCClient() throws IoTEdgeDcClientException {
     MqttCallbackExtended callback = new MqttCallbackExtended() {
       @Override
@@ -271,8 +334,25 @@ public class RESampleApp {
     }
   }
 
+  /**
+   * Subscribe.
+   */
   private static void subscribe() {
-    String topicToSubscribe = deviceAttributes.get(ConstantUtils.FIRST_DEVICE).getTopicCommand();
+    String topicToSubscribe = deviceAttributes == null ? null
+        : deviceAttributes.get(ConstantUtils.FIRST_DEVICE) == null ? null
+            : deviceAttributes.get(ConstantUtils.FIRST_DEVICE).getTopicCommand();
+    if (topicToSubscribe != null && !topicToSubscribe.isEmpty()) {
+      logger.info("Subscribing to topic : {}", topicToSubscribe);
+      try {
+        dcClient.subscribe(topicToSubscribe);
+        logger.debug("Subscription to topic was successful on connect: {}", topicToSubscribe);
+      } catch (IoTEdgeDcClientException e) {
+        logger.error("Subscription to topic was unsuccessful on connect: {}", topicToSubscribe);
+        logger.error("errMessage={}, errStack={}", e.getMessage(), e.getStackTrace());
+      }
+    }
+
+    topicToSubscribe = gwAttributes.getGatewayCommandTopic();
     if (topicToSubscribe != null && !topicToSubscribe.isEmpty()) {
       logger.info("Subscribing to topic : {}", topicToSubscribe);
       try {
@@ -285,6 +365,9 @@ public class RESampleApp {
     }
   }
 
+  /**
+   * Inits the HTTP client to read data from Raspberry pi
+   */
   private static void initHTTPClient() {
     httpClient = HttpClientBuilder.create().build();
     observationGetRequests = new ArrayList<HttpGet>();
@@ -301,6 +384,11 @@ public class RESampleApp {
     logger.info("Done Intializing HTTP client and request URIs");
   }
 
+  /**
+   * Gets the observation using HTTP client.
+   *
+   * @return the observation using HTTP client
+   */
   // EFFECTS: obtaining the messages from the Rpi
   private static List<String> getObservationUsingHTTPClient() {
     logger.debug("Obtaining the messages from the Rpi");
@@ -335,6 +423,9 @@ public class RESampleApp {
     return observations;
   }
 
+  /**
+   * Inits the HTTP client to post data to device
+   */
   private static void initHTTPClientPost() {
     httpPostClient = HttpClientBuilder.create().build();
     String ip = deviceAttributes.get(ConstantUtils.FIRST_DEVICE).getIp();
@@ -347,6 +438,11 @@ public class RESampleApp {
     httpRequestOnMsgArrival.setConfig(requestConfig);
   }
 
+  /**
+   * Send data to device.
+   *
+   * @param message the message
+   */
   private static void sendDataToDevice(MqttMessage message) {
     CloseableHttpResponse response = null;
     try {
@@ -366,6 +462,12 @@ public class RESampleApp {
     }
   }
 
+  /**
+   * Process data from file.
+   *
+   * @param dataFile the data file
+   * @throws IoTEdgeDcClientException the io T edge dc client exception
+   */
   // EFFECTS: process data from local file
   private static void processDataFromFile(String dataFile) throws IoTEdgeDcClientException {
     try {
@@ -417,18 +519,37 @@ public class RESampleApp {
     } catch (IOException e) {
       logger.error("err='Error processing data against rule',errMessage={},errStack={}",
           e.getMessage(), e);
+    } catch (IoTDeviceSDKCommonException e) {
+      logger.error("err='Error processing data against rule',errMessage={},errStack={}",
+          e.getMessage(), e);
     }
   }
 
-  private static void sendMessageUpstream(String gwTopicObs, REMessage msg) {
+  private static void sendMessageUpstream(String gwTopicObs, REMessage msg)
+      throws IoTDeviceSDKCommonException {
     // Important step.
     // Adding label to gateway topic
-    String topicToPublish = gwTopicObs + msg.getTopic();
+    String gwId = gwAttributes.getGatewayId();
+    String deviceId = deviceAttributes == null ? gwId : deviceAttributes.get("1") == null ? gwId
+        : deviceAttributes.get("1").getId() == null ? gwId : deviceAttributes.get("1").getId();
+    String topicToPublish = null;
+    if ((deviceAttributes != null) && (deviceAttributes.get("1") != null)
+        && (deviceAttributes.get("1").getTopicObservation() != null)
+        && !(deviceAttributes.get("1").getTopicObservation().isEmpty())) {
+      topicToPublish = deviceAttributes.get("1").getTopicObservation() + msg.getTopic();
+    } else {
+      topicToPublish = gwTopicObs + msg.getTopic();
+    }
+    String payload = HelperMethods.getPublishPayload(msg.getPayload(), gwAttributes.isUseEnvelop(),
+        topicToPublish, msg.getTopic(), deviceId, 0, false);
+    topicToPublish =
+        HelperMethods.getPublishTopic(topicToPublish, gwAttributes.isUseEnvelop(), false);
+
     if (dcClient != null) {
-      logger.info("Publishing RE Message : {} -> {} ", msg.getPayload(), topicToPublish);
+      logger.info("Publishing RE Message : {} -> {} ", payload, topicToPublish);
       try {
         synchronized (dcClient) {
-          dcClient.publish(topicToPublish, msg.getPayload());
+          dcClient.publish(topicToPublish, payload);
         }
       } catch (IoTEdgeDcClientException e) {
         logger.error("err='Error publishing data',errMessage={},errStack={}", e.getMessage(), e);
@@ -438,45 +559,10 @@ public class RESampleApp {
     }
   }
 
-  private static void sendProcessedDataUsingREWithDCClient(String configFile)
-      throws IoTEdgeDcClientException {
-    try {
-      // Initialize HTTP client
-      initHTTPClient();
-      RuleEngineWithDCClient ruleProcessor = null;
-      ruleProcessor = new RuleEngineWithDCClient(props);
 
-      logger.info("Done Initializing the rule engine using config file : {}", configFile);
-      String pollingIntervalSecsStr = props.getProperty(BaseConstantsUserParams.APPLICATION_SECTION
-          + BaseConstantsUserParams.SECTION_PARAMETER_DELIMITER
-          + BaseConstantsUserParams.POLLING_INTERVAL);
-      int pollingIntervalSecs = Integer.parseInt(pollingIntervalSecsStr);
-      String assetName = deviceAttributes.get(ConstantUtils.FIRST_DEVICE).getTag();
-      String gwTopicObs = deviceAttributes.get(ConstantUtils.FIRST_DEVICE).getTopicObservation();
-
-      while (true) {
-        List<String> observations = getObservationUsingHTTPClient();
-        for (String obsv : observations) {
-          try {
-            ruleProcessor.ProcessAndSendDataUsingDcClient(assetName, obsv, gwTopicObs);
-          } catch (Exception e) {
-            logger.error("Error processing data against rule:  errMessage={},errStack={}",
-                e.getMessage(), e);
-          }
-        }
-        try {
-          Thread.sleep(pollingIntervalSecs * 1000);
-        } catch (InterruptedException e) {
-          logger.error("Encountered interrupted exception: errMessage={},errStack={}",
-              e.getMessage(), e);
-        }
-      }
-    } catch (RuleProcessorException e) {
-      logger.error("Error when processing data with rule processor:  errMessage={},errStack={}",
-          e.getMessage(), e);
-    }
-  }
-
+  /**
+   * Shuts down the application.
+   */
   private static void shutDownAll() {
     logger.info("msg='Shutting down Special Message Thread'");
     if (scheduledExecutorService != null) {
@@ -484,6 +570,9 @@ public class RESampleApp {
     }
   }
 
+  /**
+   * Instantiates a new Rule Engine sample app.
+   */
   private RESampleApp() {
 
   }
