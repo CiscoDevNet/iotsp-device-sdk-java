@@ -1,7 +1,27 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## May 21, 2018    
+
+### Changed  
+
+* Tagged older versions to version_4_21may2018
+* Support envelope message type, where actual users payload and telemetry details could be packaged together and sent to DCM. 
+  * Also adding "send_message_in_envelope" flag support to control sending messages in envelope or not. 
+* Adding new parameters like name, serial no, uuid to gateway attributes. 
+* Fixing the issue in obtaining device attributes 
+
+### Added  
+
+* iotsp-device-sdk-common-0.3.5.0.jar - 
+  * new library supporting the above functionality 
+
+### Removed  
+
+
 ## March 21, 2018    
+
+### Tag - version_4_21May2018
 
 ### Changed   
 
