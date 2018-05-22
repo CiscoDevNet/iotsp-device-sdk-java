@@ -21,6 +21,8 @@ All notable changes to this project will be documented in this file.
 
 ## March 21, 2018    
 
+### Tag - version_4_21May2018
+
 ### Changed   
 
 * Example applications iotsp-edge-rule-engine and iotsp-batching updated to use latest libraries.   
