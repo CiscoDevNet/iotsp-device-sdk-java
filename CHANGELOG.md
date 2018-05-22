@@ -17,7 +17,6 @@ All notable changes to this project will be documented in this file.
   * new library supporting the above functionality 
 
 ### Removed  
-* iotsp-device-sdk-common-0.3.4.0-SNAPSHOT.jar 
 
 
 ## March 21, 2018    
