@@ -26,14 +26,36 @@ import com.cisco.iot.swp.edge.mqtt.client.ICloudConnectClient;
 import com.cisco.iot.swp.edge.mqtt.exception.IoTEdgeDcClientException;
 import com.cisco.it.swp.edge.utils.ConstantUtils;
 
+
+/**
+ * Contains methods that create special types of messages that do not contain data.
+ * The types of special messages that exist are Keep Alive messages, Diagnostic messages, and Ack Messages 
+ */
 public class SpecialMessage {
+  
+  /** The log. */
   private static Logger LOG = LoggerFactory.getLogger(SpecialMessage.class);
+  
+  /** The gw attributes. */
   private GatewayAttributes gwAttributes = null;
+  
+  /** The device attributes. */
   private Map<String, DeviceAttributes> deviceAttributes = null;
 
+  /** The send data to cloud. */
   private boolean sendDataToCloud;
+  
+  /** The dc client. */
   private ICloudConnectClient dcClient;
 
+  /**
+   * Instantiates a new special message.
+   *
+   * @param sendDataToCloud the send data to cloud
+   * @param dcClient the dc client
+   * @param gwAttributes the gw attributes
+   * @param deviceAttributes the device attributes
+   */
   public SpecialMessage(boolean sendDataToCloud, ICloudConnectClient dcClient,
       GatewayAttributes gwAttributes, Map<String, DeviceAttributes> deviceAttributes) {
     this.dcClient = dcClient;
@@ -41,13 +63,24 @@ public class SpecialMessage {
     this.gwAttributes = gwAttributes;
     this.deviceAttributes = deviceAttributes;
   }
-
+  
+  /**
+   * Generates and sends a keep alive message from the application running on the gateway. The application 
+   * knows about device state and configuration. These messages are generated and periodically sent to
+   * the data pipeline
+   *
+   * @throws IoTDeviceSDKCommonException the io T device SDK common exception
+   * @throws IoTEdgeDcClientException the io T edge dc client exception
+   */
   public void sendKeepAlive() throws IoTDeviceSDKCommonException, IoTEdgeDcClientException {
     // Keep Alive Message
+    String deviceId = deviceAttributes == null ? gwAttributes.getGatewayId()
+        : deviceAttributes.get("1") == null ? gwAttributes.getGatewayId()
+            : deviceAttributes.get("1").getId() == null ? gwAttributes.getGatewayId() : deviceAttributes.get("1").getId();
     KeepAliveDeviceInformation device =
         new KeepAliveDeviceInformation.KeepAliveDeviceInformationBuilder()
             .connected(EDeviceConnectedToGateway.CONNECTED)
-            .deviceId(deviceAttributes.get(ConstantUtils.FIRST_DEVICE).getId())
+            .deviceId(deviceId)
             .enabled(EDeviceAdministrativeState.ON).reachable(EDeviceReachableFromGateway.REACHABLE)
             .build();
     List<KeepAliveDeviceInformation> deviceInfo = new ArrayList<KeepAliveDeviceInformation>();
@@ -74,7 +107,15 @@ public class SpecialMessage {
           ConfigHelper.getKeepAliveTopicForGateway(gwAttributes), msg.toString());
     }
   }
-
+  
+  /**
+   * Generates and sends a diagnostic message from the application running on the gateway. The diagnostic messages
+   * contain information about any issues with the devices or gateways.
+   * These messages are generated and periodically sent to the data pipeline
+   *
+   * @throws IoTDeviceSDKCommonException the io T device SDK common exception
+   * @throws IoTEdgeDcClientException the io T edge dc client exception
+   */
   public void sendDiagnosticMessage() throws IoTDeviceSDKCommonException, IoTEdgeDcClientException {
     Random rand = new Random();
     int n = rand.nextInt(50) + 1;
@@ -93,7 +134,13 @@ public class SpecialMessage {
           ConfigHelper.getDiagnosticTopicForGateway(gwAttributes), diagnostic.toString());
     }
   }
-
+  
+  /**
+   * Generates and sends Ack/Nack messages to confirm if a message for a command is received from the
+   * IBM application.
+   *
+   * @throws Exception the exception
+   */
   public void sendAckMessage() throws Exception {
     AckMessage ackMessage = new AckMessage.AckMessageBuilder()
         .deviceId(deviceAttributes.get(ConstantUtils.FIRST_DEVICE).getId())
