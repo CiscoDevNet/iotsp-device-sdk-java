@@ -21,16 +21,38 @@ import com.cisco.iot.swp.device.sdk.common.model.message.type.BatchMessage;
 import com.cisco.iot.swp.device.sdk.common.utils.BaseConstantsUserParams;
 import com.cisco.iot.swp.edge.mqtt.client.ICloudConnectClient;
 
+
+/**
+ * Contains methods that sends batched messages to a given MQTT client.
+ */
 public class BatchToCloudClient {
 
+  /** The batch manager. */
+  private IBatchStoreManager batchManager = null;
 
-  private static IBatchStoreManager batchManager = null;
+  /** The compression utils. */
   private ICompressionUtils compressionUtils = null;
+
+  /** The log. */
   private static Logger LOG = LoggerFactory.getLogger(BatchToCloudClient.class);
+
+  /** The batch. */
   private byte[] batch;
+
+  /** The check batch ready thread. */
   private ScheduledExecutorService checkBatchReadyThread;
 
-
+  /**
+   * Takes in a configuration file, a compression type, and a MQTT client and starts a thread that
+   * periodically checks if a batch is ready to be sent to a given MQTT topics specified in the
+   * config file.
+   *
+   * @param props the configuration file that contains information necessary to send a batch to the
+   *        cloud
+   * @param compression the type of compression that is to be applied to the messages to batch them
+   * @param dcClient a MQTT client that the batch will be sent using (ssl, websockets, etc.)
+   * @throws IoTBatchingException the io T batching exception
+   */
   public BatchToCloudClient(Properties props, ICompressionUtils compression,
       ICloudConnectClient dcClient) throws IoTBatchingException {
     if (props == null) {
@@ -46,10 +68,17 @@ public class BatchToCloudClient {
     }
     this.compressionUtils = compression;
     batchManager = new BatchStoreManager(props, this.compressionUtils);
-    String topic = props.getProperty(BaseConstantsUserParams.GATEWAY_OBV_BATCH_TOPIC);
+    String topic = props.getProperty(BaseConstantsUserParams.GATEWAY_OBV_BATCH_TOPIC)
+        + BaseConstantsUserParams.TOPIC_DELIMITER + System.currentTimeMillis();
     checkBatchReady(topic, dcClient);
   }
 
+  /**
+   * Check batch ready.
+   *
+   * @param topic the topic
+   * @param dcClient the dc client
+   */
   protected void checkBatchReady(String topic, ICloudConnectClient dcClient) {
     LOG.debug("Starting new thread to check batch readiness");
     checkBatchReadyThread = Executors.newScheduledThreadPool(1);
@@ -66,6 +95,14 @@ public class BatchToCloudClient {
     /// checkBatchReadyThread.shutdown();
   }
 
+  /**
+   * Puts a message into a batch, returns true if message is properly added to batch, false
+   * otherwise.
+   *
+   * @param message the message to be batched
+   * @return true if message is properly sent, false otherwise
+   * @throws IoTBatchingException the io T batching exception
+   */
   public boolean putMessageInBatch(BatchMessage message) throws IoTBatchingException {
     if (message != null) {
       String messageStr = message.toString();
@@ -79,6 +116,13 @@ public class BatchToCloudClient {
     return false;
   }
 
+  /**
+   * Send batch to Cisco Kinetic DCM.
+   *
+   * @param topic the topic
+   * @param dcClient the dc client
+   * @param batch the batch
+   */
   protected void sendBatch(String topic, ICloudConnectClient dcClient, byte[] batch) {
     if (dcClient != null) {
       try {
@@ -107,6 +151,10 @@ public class BatchToCloudClient {
     }
   }
 
+  /**
+   * Closes the thread that continuously checks if a batch is available to send and the batch
+   * manager.
+   */
   public void closeBatchCheckThread() {
     LOG.info("msg='Closing Batch Checker Thread'");
     batchManager.closeBatchManager();

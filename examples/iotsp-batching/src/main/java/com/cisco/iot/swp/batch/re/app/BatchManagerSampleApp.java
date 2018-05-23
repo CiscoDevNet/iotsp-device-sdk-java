@@ -46,6 +46,7 @@ import com.cisco.iot.swp.device.sdk.common.model.config.GatewayAttributes;
 import com.cisco.iot.swp.device.sdk.common.model.message.type.BatchMessage;
 import com.cisco.iot.swp.device.sdk.common.utils.BaseConstantsUserParams;
 import com.cisco.iot.swp.device.sdk.common.utils.ConfigHelper;
+import com.cisco.iot.swp.device.sdk.common.utils.HelperMethods;
 import com.cisco.iot.swp.dsl.utils.RuleProcessorException;
 import com.cisco.iot.swp.edge.mqtt.client.ICloudConnectClient;
 import com.cisco.iot.swp.edge.mqtt.client.MQTTClientEdge;
@@ -82,6 +83,7 @@ public class BatchManagerSampleApp {
 
   public static void main(String[] args)
       throws IoTBatchingException, IoTEdgeDcClientException, IoTDeviceSDKCommonException {
+       
     appOptions = CommandLineOptionParser.readOptionsFromCommandLine(args);
     deviceAttributes = new HashMap<String, DeviceAttributes>();
     Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -134,6 +136,10 @@ public class BatchManagerSampleApp {
       LOG.info("Done Initializing the IOTDC client");
     }
     
+    if (appOptions.isSendDataToCloud()) {
+      subscribe();
+    }
+
     specialMessageSend = new SpecialMessage(appOptions.isSendDataToCloud(), dcClient, gwAttributes,
         deviceAttributes);
 
@@ -178,23 +184,23 @@ public class BatchManagerSampleApp {
         ConstantUtils.SPECIAL_MESSAGE_INTERVAL, ConstantUtils.SPECIAL_MESSAGE_INTERVAL_UNIT);
   }
 
-  private static void sendSpecialMessageUpstream()
-      throws Exception {
+  private static void sendSpecialMessageUpstream() throws Exception {
     specialMessageSend.sendKeepAlive();
     specialMessageSend.sendDiagnosticMessage();
     specialMessageSend.sendAckMessage();
   }
 
-  private static BatchMessage constructBatchMessage(REMessage msg)
-      throws IoTBatchingException, IoTDeviceSDKCommonException {
+  private static BatchMessage constructBatchMessage(REMessage msg, String topicToPublish,
+      String gwId, String deviceId) throws IoTBatchingException, IoTDeviceSDKCommonException {
+    
     long timestamp = System.currentTimeMillis();
     Random rnd = new Random();
     long messageID = 100000 + rnd.nextInt(900000);
 
-    BatchMessage obvMsg = new BatchMessage.BatchMessageBuilder().format("json")
-        .qos(BaseConstants.ATMOST_ONCE_QOS).timestamp(timestamp).messageId(messageID)
-        .deviceId(deviceAttributes.get(ConstantUtils.FIRST_DEVICE).getId()).data(msg.getPayload())
-        .label(msg.getTopic()).build();
+    BatchMessage obvMsg =
+        new BatchMessage.BatchMessageBuilder().format("json").qos(BaseConstants.ATMOST_ONCE_QOS)
+            .timestamp(timestamp).messageId(messageID).deviceId(deviceId).data(msg.getPayload())
+            .topic(topicToPublish).label(msg.getTopic()).build();
     if (obvMsg != null) {
       LOG.trace("Batch message has been constructed from string data {}", obvMsg);
       return obvMsg;
@@ -222,16 +228,22 @@ public class BatchManagerSampleApp {
 
       @Override
       public void deliveryComplete(IMqttDeliveryToken token) {
-        // LOG.info("Delivery complete for message...");
+        // logger.info("Delivery complete for message...");
       }
 
       @Override
       public void connectComplete(boolean reconnect, String serverURI) {
         LOG.info("Reconnection status={}, serverURI={}", reconnect, serverURI);
-        subscribe();
+
+        // Re subscribing when reconnect=true is important otherwise the mqtt connection is lost
+        // when establishing actual connection. It is important to re subscribe here as we have set
+        // autoReconnect=true and cleanSession=true. So every time it reconnects subscribe info is
+        // lost.
+        if (reconnect) {
+          subscribe();
+        }
       }
     };
-    LOG.info("Initializing the Mqtt client...");
     dcClient = new MQTTClientEdge();
     LOG.info("Initializing the Mqtt client with callback...");
     dcClient.init(props, callback);
@@ -244,19 +256,32 @@ public class BatchManagerSampleApp {
         LOG.error("exception during mqtt client initializtion {}.", e.getMessage());
       }
     }
-    LOG.info("Done Initializing the Mqtt client...");
   }
 
   private static void subscribe() {
-    String topicToSubscribe = deviceAttributes.get(ConstantUtils.FIRST_DEVICE).getTopicCommand();
+    String topicToSubscribe = deviceAttributes == null ? null
+        : deviceAttributes.get(ConstantUtils.FIRST_DEVICE) == null ? null
+            : deviceAttributes.get(ConstantUtils.FIRST_DEVICE).getTopicCommand();
     if (topicToSubscribe != null && !topicToSubscribe.isEmpty()) {
       LOG.info("Subscribing to topic : {}", topicToSubscribe);
       try {
         dcClient.subscribe(topicToSubscribe);
-        LOG.info("Subscription to topic was successful on connect: {}", topicToSubscribe);
+        LOG.debug("Subscription to topic was successful on connect: {}", topicToSubscribe);
       } catch (IoTEdgeDcClientException e) {
         LOG.error("Subscription to topic was unsuccessful on connect: {}", topicToSubscribe);
-        LOG.error("errMessage={}, errStack={}", e.getMessage(), e.getStackTrace());
+        LOG.error("errMessage={}, errStack=[{}]", e.getMessage(), e.getStackTrace());
+      }
+    }
+
+    topicToSubscribe = gwAttributes.getGatewayCommandTopic();
+    if (topicToSubscribe != null && !topicToSubscribe.isEmpty()) {
+      LOG.info("Subscribing to topic : {}", topicToSubscribe);
+      try {
+        dcClient.subscribe(topicToSubscribe);
+        LOG.debug("Subscription to topic was successful on connect: {}", topicToSubscribe);
+      } catch (IoTEdgeDcClientException e) {
+        LOG.error("Subscription to topic was unsuccessful on connect: {}", topicToSubscribe);
+        LOG.error("errMessage={}, errStack=[{}]", e.getMessage(), e.getStackTrace());
       }
     }
   }
@@ -344,32 +369,38 @@ public class BatchManagerSampleApp {
 
   private static void batchOrSendMsgBasedOnRule(REMessage msg, boolean sendDataUsingDCClient)
       throws IoTBatchingException, IoTDeviceSDKCommonException {
+    String topicToPublish = gwAttributes.getGatewayObservationTopic() + msg.getTopic();
+
+    String gwId = gwAttributes.getGatewayId();
+    String deviceId = deviceAttributes == null ? gwId
+        : deviceAttributes.get("1") == null ? gwId
+            : deviceAttributes.get("1").getId() == null ? gwId : deviceAttributes.get("1").getId();
+
     if (msg.getAsBatch()) {
       // add message to batch; batch client background thread will send when ready
-      if (batchClient.putMessageInBatch(constructBatchMessage(msg))) {
+      BatchMessage batchMessage = constructBatchMessage(msg, topicToPublish, gwId, deviceId);
+      if (batchClient.putMessageInBatch(batchMessage)) {
         LOG.debug("msg='Message successfully added to batch {}'", msg.toString());
       } else {
         LOG.debug("msg='Message not added to batch {}'", msg.toString());
       }
     } else {
-      // Important step - Adding modifying label from rule engine to gateway topic.
-      String tempTopic = gwAttributes.getGatewayObservationTopic() + msg.getTopic();
+      String payload = HelperMethods.getPublishPayload(msg.getPayload(),
+          gwAttributes.isUseEnvelop(), topicToPublish, msg.getTopic(), deviceId, 0, false);
+      topicToPublish = HelperMethods.getPublishTopic(topicToPublish, gwAttributes.isUseEnvelop(),
+          msg.getAsBatch());
 
-      if (sendDataUsingDCClient) {
-        // Send immediately to cloud
+      if (dcClient != null) {
+        LOG.info("Publishing RE Message : {} -> {} ", payload, topicToPublish);
         try {
-          dcClient.publish(tempTopic, msg.getPayload());
-          LOG.debug("msg=Message published={} on topic {}'", msg.getPayload(), tempTopic);
+          synchronized (dcClient) {
+            dcClient.publish(topicToPublish, payload);
+          }
         } catch (IoTEdgeDcClientException e) {
-          LOG.error(
-              "err='Could not send message to cloud. Adding to batch.', erMessage={}, errStack={}",
-              e.getMessage(), e.getStackTrace());
-          LOG.trace("msg='Message that could not be sent to cloud={} => topic={}'", msg.toString(),
-              tempTopic);
-          batchClient.putMessageInBatch(constructBatchMessage(msg));
+          LOG.error("err='Error publishing data',errMessage={},errStack={}", e.getMessage(), e);
         }
       } else {
-        LOG.debug("msg=Message published={} on topic {}'", msg.getPayload(), tempTopic);
+        LOG.info("RE Message : {} -> {} ", msg.getPayload(), topicToPublish);
       }
     }
   }
