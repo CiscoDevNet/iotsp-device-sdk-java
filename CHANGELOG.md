@@ -1,5 +1,11 @@
 # Changelog
-All notable changes to this project will be documented in this file.
+All notable changes to this project will be documented in this file.   
+
+## May 22, 2018    
+
+### Changed  
+
+* Update iotsp-edge-rule-engine with latest libraries supporting iotsp-device-sdk-common-0.3.5.0-SNAPSHOT.jar.    
 
 ## May 21, 2018    
 
@@ -13,7 +19,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added  
 
-* iotsp-device-sdk-common-0.3.5.0.jar - 
+* iotsp-device-sdk-common-0.3.5.0-SNAPSHOT.jar - 
   * new library supporting the above functionality 
 
 ### Removed  
