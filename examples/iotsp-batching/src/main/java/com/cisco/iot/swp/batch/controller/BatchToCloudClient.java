@@ -69,7 +69,7 @@ public class BatchToCloudClient {
     this.compressionUtils = compression;
     batchManager = new BatchStoreManager(props, this.compressionUtils);
     String topic = props.getProperty(BaseConstantsUserParams.GATEWAY_OBV_BATCH_TOPIC)
-        + BaseConstantsUserParams.TOPIC_DELIMITER + System.currentTimeMillis();
+        + BaseConstantsUserParams.TOPIC_DELIMITER;
     checkBatchReady(topic, dcClient);
   }
 
@@ -87,7 +87,7 @@ public class BatchToCloudClient {
       public void run() {
         batch = batchManager.getCompressedBatch();
         if (batch != null && batch.length != 0) {
-          sendBatch(topic, dcClient, batch);
+          sendBatch(topic + System.currentTimeMillis(), dcClient, batch);
           LOG.trace("batch {} sent to broker or published to file", batch);
         }
       }

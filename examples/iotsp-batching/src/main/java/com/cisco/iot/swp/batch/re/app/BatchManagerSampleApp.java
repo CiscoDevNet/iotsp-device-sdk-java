@@ -391,13 +391,19 @@ public class BatchManagerSampleApp {
           msg.getAsBatch());
 
       if (dcClient != null) {
-        LOG.info("Publishing RE Message : {} -> {} ", payload, topicToPublish);
         try {
           synchronized (dcClient) {
-            dcClient.publish(topicToPublish, payload);
+              LOG.info("DClient Publishing RE Message : {} -> {} ", payload, topicToPublish);
+              dcClient.publish(topicToPublish, payload); 
           }
         } catch (IoTEdgeDcClientException e) {
-          LOG.error("err='Error publishing data',errMessage={},errStack={}", e.getMessage(), e);
+          LOG.error("err='Error publishing data(adding to batch)',errMessage={},errStack={}", e.getMessage(), e);
+          BatchMessage batchMessage = constructBatchMessage(msg, topicToPublish, gwId, deviceId);
+          if (batchClient.putMessageInBatch(batchMessage)) {
+            LOG.debug("msg='Message successfully added to batch {}'", msg.toString());
+          } else {
+            LOG.debug("msg='Message not added to batch {}'", msg.toString());
+          }
         }
       } else {
         LOG.info("RE Message : {} -> {} ", msg.getPayload(), topicToPublish);

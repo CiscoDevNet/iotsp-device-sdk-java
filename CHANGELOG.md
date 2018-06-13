@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.   
 
+## June 12, 2018    
+
+### Changed  
+
+* Added updated libraries iot-mqtt-client-edge-0.3.4.0-SNAPSHOT.jar and iotsp-device-sdk-common-0.3.6.0-SNAPSHOT.jar.     
+* supports setting the following parameters through package_config.ini (which will be available for application to configure
+  during deployment through portal 
+* Updating the batching application with new libraries
+
+
 ## May 22, 2018    
 
 ### Changed  
