@@ -272,7 +272,8 @@ Main methods regarding the in-built MQTT client in the sample file are explained
 /*EFFECTS: client object instantiation*/ 
 
 /*To use the already provided implementation, initialize the ICloudConnectClient as*/
-ICloudConnectClient dcClient = new MQTTClientEdge();
+String clientId = "gwid-testclient";
+ICloudConnectClient dcClient = new MQTTClientEdge(clientId);
 
 /*To use a custom MQTT implementation, implement the "ICloudConnectClient" interface and then initialize the custom object as follows:*/
 ICloudConnectClient dcClient = new SomeCustomMQTTImplementation();

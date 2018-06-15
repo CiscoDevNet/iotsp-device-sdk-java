@@ -48,7 +48,7 @@ cd iotsp-batching
 
 * Modify package_config.ini in root.   
 
-* Run the BatchManagerSampleAppHBR.java.   
+* Run the BatchManagerSampleApp.java.   
 
 * Provide environment variables by adding in Program Variables section of Run Configurations  
 	* -s -> For sending data to cloud  
