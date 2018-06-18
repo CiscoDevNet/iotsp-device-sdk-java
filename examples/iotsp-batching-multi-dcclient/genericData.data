@@ -1,0 +1,8 @@
+assetpi;1000;{"temperature": 10, "msg":1}
+assetpi;1000;{"temperature": 20, "msg":1}
+assetpi;1000;{"temperature": 30, "msg":1}
+assetpi;1000;{"temperature": 40, "msg":2}
+assetpi;1000;{"temperature": 50, "msg":7}
+assetpi;1000;{"temperature": 60, "msg":8}
+assetpi;1000;{"temperature": 70, "msg":9}
+assetpi;1000;{"temperature": 80, "msg":10}

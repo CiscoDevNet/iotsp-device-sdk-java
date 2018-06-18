@@ -21,6 +21,7 @@ This repository contains sample applications and libraries for
 | 1       | iotsp-edge-rule-engine | The iotsp-edge-rule-engine allows application developers to filter, process and send their data to different destinations. Sample project for [Rule Engine On Edge](examples/iotsp-edge-rule-engine)|  
 | 2       | iotsp-batching | The iotsp-batching allows application developers to filter, process and send their data to different destinations. The observations being sent to Cisco's cloud platform can be batched and compressed to save network bandwidth or it can be sent as it is immediately. Sample project for [Batching](examples/iotsp-batching)| 
 | 3      | Pi-sensehat | The Pi-Sensehat directory contains all the materials necessary to install the sensehat application on the raspberry pi. In this directory the readme contains instructions to install the application. The sensehat-app directory is to be installed into the home/pi/projects directory on the raspberry pi. This application is required on raspberri-pi if developers use raspberri-pi in above applications. Sample project for [Pi-sensehat](Pi-sensehat)|  
+| 4        | iotsp-batching-multi-dcclient | This application is similarly to iotsp-batching but uses multiple MQTT DC clients to achieve the job. It uses one client to publish observations, one for batched messages and one for special messages. Each MQTT client is created using a unique client id, so the MQTT broker allows multiple connections from same gateway. [Batching with Multi DC Clients](examples/iotsp-batching-multi-dcclient)
 
 ## How to use the Cisco IoT SDKs for Java   
 Connect your device to the gateway. The IoT device SDKs enable you to implement applications for a gateway. These gateways can be connected to any sort of device and can extract and process information received from these devices.  
@@ -32,6 +33,7 @@ The application will run on Mac, Linux, IOx. To start developing these applicati
 | 1       | iotsp-edge-rule-engine | [Getting Started](examples/iotsp-edge-rule-engine/GettingStarted.md), [Readme](examples/iotsp-edge-rule-engine/README.md)|  
 | 2       | iotsp-batching |  [Getting Started](examples/iotsp-batching/GettingStarted.md), [Readme](examples/iotsp-batching/README.md)| 
 | 3      | Pi-sensehat | [Readme](Pi-sensehat/README.md)|  
+| 4      | iotsp-batching-multi-dcclient| [Getting Started](examples/iotsp-batching-multi-dcclient/README.md)|  
 
 ## Java docs for libraries    
 
@@ -53,6 +55,7 @@ In this repository, you can find simple sample implementations that will kicksta
 |:-------------:|:--------------------|:------------|   
 | 1       | iotsp-edge-rule-engine | Sample application for [Rule Engine On Edge](examples/iotsp-edge-rule-engine/src/main/java/com/cisco/iot/swp/edge/app/RESampleApp.java)|      
 | 2       | iotsp-batching | Sample application for [Batching](examples/iotsp-batching/src/main/java/com/cisco/iot/swp/batch/re/app/BatchManagerSampleApp.java)|          
+| 3       | iotsp-batching-multi-dcclient | Sample application using multiple MQTT DC clients for [Batching](examples/iotsp-batching/src/main/java/com/cisco/iot/swp/batch/re/app/BatchManagerSampleApp.java)|          
 
 ## Writing Rules  
 To write rules, please refer Cisco's tutorial on their [DSL](https://github.com/CiscoDevNet/iot-state-processing-dsl).  
