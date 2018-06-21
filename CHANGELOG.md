@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.   
 
+## June 13,2018
+
+### Changed
+* Added new version MQTT client library to the SDK [iot-mqtt-client-edge-1.0.0.0-SNAPSHOT.jar]. Changed the way mqtt clients are instantiated. `Client id is mandated during instantiation of the MQTT cliet. This library is NOT backward compatible.
+* Added new sample application [iotsp-batching-multi-dcclient] which show cases the use of above mentioned library.
+
 ## June 12, 2018    
 
 ### Changed  
