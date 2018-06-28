@@ -1,7 +1,7 @@
 descriptor-schema-version: "2.0"
 
 info:
-  name: RE_Batch_Compression on Edge
+  name: RE_Batch_Compression on Edge(MultiDcClient)
   description: "IOx Java PaaS style Application for Rule Engine on Edge functionality with Batching and Compression Capabilities"
   version: "1.0"
   author-link: "http://www.cisco.com"

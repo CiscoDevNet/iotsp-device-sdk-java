@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.   
 
+## June 27,2018
+### Changed
+* Added new version of MQTT client library to the SDK [iot-mqtt-client-edge-1.0.0.1-SNAPSHOT.jar]. 
+  Supports adding telemetry data to the messages (Based on application configuration parameter]
+* Added new version of Device sdk library to the SDK [iotsp-device-sdk-common-0.3.7.0-SNAPSHOT.jar]. 
+  Supports reading telemetry data config flag.
+
 ## June 13,2018
 
 ### Changed

@@ -244,7 +244,8 @@ public class BatchManagerSampleApp {
         }
       }
     };
-    dcClient = new MQTTClientEdge();
+    String clientId = gwAttributes.getGatewayId() + "-BMDcClient";
+    dcClient = new MQTTClientEdge(clientId);
     LOG.info("Initializing the Mqtt client with callback...");
     dcClient.init(props, callback);
     dcClient.connect();
