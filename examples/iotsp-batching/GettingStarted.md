@@ -39,6 +39,34 @@ There are 2 types of messages that are received by the library -
 * To be batched according to policy defined     
 * To be batched for immediate send - These messages are those which had to be sent immediately but couldn't be processed due to connection errors or some other reasons. These are to be sent as soon as the prevailing condition is resolved.       
 
+
+## Telemetry data
+Currently the SDK supports adding telemetry data to the messages. This can turned on by setting the application configuration parameter in package_config.ini to "true".
+* The configuration parameter that can used to turn on the telemetry data and turn them off is : "include_meta_data_with_msg"
+* When using the "CustomSSLMqttClient" part of SDK, the users do not need to do anything other than adding this flag into the package_config.ini under application section and set to "true" to obtain telemetry data. The CustomSSLMqttClient inherently checks the "include_meta_data_with_msg" flag and constructs the appropriate payload and topic (thats used to publish to DCM)
+* When not using the "CustomSSLMqttClient" and using the regular  "MQTTClientEdge" part of SDK, users can use helper class to obtain the payload and topic to publish. 
+```
+  com.cisco.iot.swp.device.sdk.common.utils.HelperMethods.getPublishTopic(String topic, boolean useTelemetry, boolean isBatch)
+  com.cisco.iot.swp.device.sdk.common.utils.HelperMethods.getPublishPayload(String payload, boolean useTelemetry, String topicToPublish, String label, String deviceId, int QOS, boolean isBatch)
+
+  https://github.com/CiscoDevNet/iotsp-device-sdk-java/blob/8f14c8eed1c033bb7904dc2ea57f9108ab55a7cb/examples/iotsp-batching/src/main/java/com/cisco/iot/swp/batch/re/app/BatchManagerSampleApp.java#L388
+```* When the "include_meta_data_with_msg" flag is set to true, the actual message payload is sent with the telemetry data to the destination.               
+* For AMQP 0.9 the data can be expected in the following manner:
+```
+('Headers : ', {'dp_received_ts': u'1530143798459', 'sent_to_destination': u'1530143798632', 'route_version': u'v1', '__kinetic__app_sent_at': u'1530143798092', 'route': u'/v1/321:285961/json/dev2app/alertTemp', '__kinetic__dcm_received_at': u'1530143798229', 'gatewayId': u'321', 'message_direction': u'dev2app', 'tag': u'alertTemp', 'deviceId': u'285961', 'content_type': u'json', 'assetName': u'assetpi', 'accountId': u'853', 'device_id': u'285961'})
+```
+* For IBM destination the data can be expected in the following manner(envelope with original payload with extra object having telemetry details:
+```
+{
+        "actual data" : "not touched"
+        "__kinetic__": {
+                "dcm_sent_at": "1530144426872",
+                "dcm_received_at": "1530144426530",
+                "app_sent_at": "1530144426286"
+        }
+}
+```
+
 ## Code Walk Through for the Sample Application:  
 
 ### **Sample Application**        	

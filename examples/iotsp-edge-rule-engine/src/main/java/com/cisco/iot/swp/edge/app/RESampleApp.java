@@ -108,6 +108,7 @@ public class RESampleApp {
   /** The special message send. */
   private static SpecialMessage specialMessageSend;
 
+
   /**
    * The main method.
    *
@@ -320,7 +321,8 @@ public class RESampleApp {
         }
       }
     };
-    dcClient = new MQTTClientEdge();
+    String clientId = gwAttributes.getGatewayId() + "-RESinglePublisher";  
+    dcClient = new MQTTClientEdge(clientId);
     logger.info("Initializing the Mqtt client with callback...");
     dcClient.init(props, callback);
     dcClient.connect();

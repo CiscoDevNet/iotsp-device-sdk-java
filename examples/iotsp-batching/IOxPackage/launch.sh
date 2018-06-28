@@ -15,7 +15,7 @@ cp $CAF_APP_CONFIG_FILE $DEST/app
 date >> $CAF_APP_LOG_DIR/stdout.log 2>&1 
 sleep 20  
 echo 'Starting the application' >> $CAF_APP_LOG_DIR/stdout.log
-cd $DEST/app; java -Xmx100m -Djava.net.preferIPv4Stack=true -XX:GCTimeRatio=4 -Djava.util.logging.config.file=logging.properties -jar iotsp-batch-store-manager-0.3.2.0-SNAPSHOT-all.jar -s -p -d genericData.data >> $CAF_APP_LOG_DIR/stdout.log 2>&1;
+cd $DEST/app; java -Xmx100m -Djava.net.preferIPv4Stack=true -XX:GCTimeRatio=4 -Djava.util.logging.config.file=logging.properties -jar iotsp-batch-store-manager-0.4.0.0-SNAPSHOT-all.jar -s -p -d genericData.data >> $CAF_APP_LOG_DIR/stdout.log 2>&1;
 echo 'Finished running the application' >> $CAF_APP_LOG_DIR/stdout.log
 while true; do
     sleep 100
