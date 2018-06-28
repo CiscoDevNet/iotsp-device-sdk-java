@@ -33,9 +33,9 @@ Currently the SDK supports adding telemetry data to the messages. This can turne
 * When using the "CustomSSLMqttClient" part of SDK, the users do not need to do anything other than adding this flag into the package_config.ini under application section and set to "true" to obtain telemetry data. The CustomSSLMqttClient inherently checks the "include_meta_data_with_msg" flag and constructs the appropriate payload and topic (thats used to publish to DCM)
 * When not using the "CustomSSLMqttClient" and using the regular  "MQTTClientEdge" part of SDK, users can use helper class to obtain the payload and topic to publish. 
 ```
-  com.cisco.iot.swp.device.sdk.common.utils.getPublishTopic(String topic, boolean useTelemetry, boolean isBatch)
+  com.cisco.iot.swp.device.sdk.common.utils.HelperMethods.getPublishTopic(String topic, boolean useTelemetry, boolean isBatch)
 
-  com.cisco.iot.swp.device.sdk.common.utils.getPublishPayload(String payload, boolean useTelemetry, String topicToPublish, String label, String deviceId, int QOS, boolean isBatch)
+  com.cisco.iot.swp.device.sdk.common.utils.HelperMethods.getPublishPayload(String payload, boolean useTelemetry, String topicToPublish, String label, String deviceId, int QOS, boolean isBatch)
 
 https://github.com/CiscoDevNet/iotsp-device-sdk-java/blob/8f14c8eed1c033bb7904dc2ea57f9108ab55a7cb/examples/iotsp-edge-rule-engine/src/main/java/com/cisco/iot/swp/edge/app/RESampleApp.java#L543
 
