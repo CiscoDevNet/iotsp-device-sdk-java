@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.   
 
+## July 10,2018    
+### Changed   
+* Fix log for device Id in set and create device command.     
+
 ## June 27,2018
 ### Changed
 * Added new version of MQTT client library to the SDK [iot-mqtt-client-edge-1.0.0.1-SNAPSHOT.jar]. 
