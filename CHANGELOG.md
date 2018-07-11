@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## July 10,2018    
 ### Changed   
-* Fix log for device Id in set and create device command.     
+* Fix log for device Id in set and create device command in SDK [iotsp-device-sdk-common-0.3.7.0-SNAPSHOT.jar].       
 
 ## June 27,2018
 ### Changed
