@@ -33,7 +33,7 @@ sleep 5
 while true; do
 echo 'Starting the application' >> $CAF_APP_LOG_DIR/stdout.log
         set -o xtrace
-java -Xmx100m -Djava.net.preferIPv4Stack=true -XX:GCTimeRatio=4 -Djava.util.logging.config.file=$CAF_APP_PATH/logging.properties -jar $CAF_APP_PATH/iot-edge-rule-engine-0.4.0.0-SNAPSHOT-all.jar -s -d $CAF_APP_PATH/genericData.data -c $CAF_APP_CONFIG_FILE >> $CAF_APP_LOG_DIR/stdout.log 2>&1;
+java -Xmx100m -Djava.net.preferIPv4Stack=true -XX:GCTimeRatio=4 -Djava.util.logging.config.file=$CAF_APP_PATH/logging.properties -jar $CAF_APP_PATH/iot-edge-rule-engine-0.4.0.1-SNAPSHOT-all.jar -s -d $CAF_APP_PATH/genericData.data -c $CAF_APP_CONFIG_FILE >> $CAF_APP_LOG_DIR/stdout.log 2>&1;
         set +o xtrace
 echo 'Finished running the application' >> $CAF_APP_LOG_DIR/stdout.log
     sleep 100

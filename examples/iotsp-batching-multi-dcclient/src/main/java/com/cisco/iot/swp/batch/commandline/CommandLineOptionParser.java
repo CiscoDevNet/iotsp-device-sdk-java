@@ -29,6 +29,7 @@ public class CommandLineOptionParser {
 
   private static String APP_EXE_NAME = "java -jar iot-rule-processor-<version>-all.jar";
   private static String DEFAULT_CONFIG_FILE = "package_config.ini";
+  private static String APP_CONFIG_FILE_ENV_VAR = "CAF_APP_CONFIG_FILE";
 
   private static String getCommandlineOption(CommandLine cmdLineOptions, List<String> optionStr) {
     String resultStr = null;
@@ -73,7 +74,12 @@ public class CommandLineOptionParser {
 
     String configFile = getCommandlineOption(cmdLineOptions, configFileOptions);
     if (configFile == null || configFile.isEmpty()) {
-      configFile = DEFAULT_CONFIG_FILE;
+      logger.info("Obtaining config file setting from env variable : [{}]", APP_CONFIG_FILE_ENV_VAR);
+      configFile = System.getenv(APP_CONFIG_FILE_ENV_VAR);
+      if (configFile == null || configFile.isEmpty()) {
+        logger.info("Setting to default config file");
+        configFile = DEFAULT_CONFIG_FILE;
+      }
     }
     appOptions.setConfigFile(configFile);
 

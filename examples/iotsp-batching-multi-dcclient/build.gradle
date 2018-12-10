@@ -15,7 +15,7 @@ apply plugin: 'maven'
 apply plugin: 'jacoco'
 
 group = 'com.cisco.iotsp'
-version = '1.0.0.0-SNAPSHOT'
+version = '1.0.0.1-SNAPSHOT'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -40,7 +40,7 @@ dependencies {
     compile files('../../libs/lib-jars/iot-state-processing-dsl-0.8.4-SNAPSHOT.jar')
     compile files('../../libs/lib-jars/iot-mqtt-client-edge-1.0.0.1-SNAPSHOT.jar')
     compile files('../../libs/lib-jars/iotsp-batch-store-manager-0.3.1.0-SNAPSHOT.jar')
-    compile files('../../libs/lib-jars/iotsp-device-sdk-common-0.3.7.0-SNAPSHOT.jar')
+    compile files('../../libs/lib-jars/iotsp-device-sdk-common-0.3.7.1-SNAPSHOT.jar')
 
     compile 'org.slf4j:slf4j-api:1.7.13'
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.4'
