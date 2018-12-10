@@ -5,7 +5,7 @@ apply plugin: 'jacoco'
 
 
 group = 'com.cisco.iotsp'
-version = '0.4.0.0-SNAPSHOT'
+version = '0.4.0.1-SNAPSHOT'
 
 buildscript {
     repositories {
@@ -34,7 +34,7 @@ dependencies {
     compile files('../../libs/lib-jars/iot-edge-rule-engine-0.3.1.0-SNAPSHOT.jar')
     compile files('../../libs/lib-jars/iot-state-processing-dsl-0.8.4-SNAPSHOT.jar')
     compile files('../../libs/lib-jars/iot-mqtt-client-edge-1.0.0.1-SNAPSHOT.jar')
-    compile files('../../libs/lib-jars/iotsp-device-sdk-common-0.3.7.0-SNAPSHOT.jar')
+    compile files('../../libs/lib-jars/iotsp-device-sdk-common-0.3.7.1-SNAPSHOT.jar')
     
     compile group: 'org.ini4j', name: 'ini4j', version: '0.5.1'
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.4'

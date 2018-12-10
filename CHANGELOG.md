@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.   
 
+## December 9, 2018   
+### Changed  
+* Fix toString method of MQTTAttribute to fix an MQTT close sequence by updating to iotsp-device-sdk-common-0.3.7.1-SNAPSHOT.jar.
+* Update all 3 applications with latest iotsp-device-sdk-common jar.  
+* Update launch and commandlineoption parser for latest IOx versions in applications iotsp-batching and iotsp-batching-multi-dcclient.  
+
+## October 9, 2018    
+### Changed   
+* Update launch and commandlineoption parser for latest IOx versions in applications iotsp-edge-rule-engine.     
+
 ## July 10,2018    
 ### Changed   
 * Fix log for device Id in set and create device command in SDK [iotsp-device-sdk-common-0.3.7.0-SNAPSHOT.jar].       
